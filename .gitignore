@@ -1,7 +1,8 @@
 # config
-bddConfig.php
+php/config/bddConfig.php
 php/config/rootConfig.php
-php/config/emailConfig.php
+php/config/mailConfig.php
+php/config/casConfig.php
 composer.lock
 composer.phar
 
