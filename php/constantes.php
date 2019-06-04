@@ -54,6 +54,4 @@
 
 	// session
 	define("SAVE_CLASSES_IN_SESSION",true);
-
-
 ?>
