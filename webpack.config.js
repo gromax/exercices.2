@@ -98,10 +98,6 @@ let config = {
       chunkFilename: devMode ? '[id].css' : '[id].[contentHash].css',
     }),
     new CopyWebpackPlugin([
-      //{
-      //  from: devMode ? './dev/assets/.htaccess.local' : './dev/assets/.htaccess.server',
-      //  to: './.htaccess'
-      //},
       {
         from: devMode ? './dev/assets/dev/.htaccess' : './dev/assets/prod/.htaccess'
       },
@@ -114,8 +110,7 @@ let config = {
         to: './favicon.png'
       },
       {
-        from: './dev/assets/api.php',
-        to: './api.php'
+        from: devMode ? './dev/assets/dev/api.php' : './dev/assets/prod/api.php'
       }
     ]),
     new webpack.ProvidePlugin({
