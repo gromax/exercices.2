@@ -1,5 +1,5 @@
 import Marionette from 'backbone.marionette'
-import Syphon from 'backbone.syphon'
+import Radio from 'backbone.radio'
 
 Manager = Marionette.Application.extend {
 	region: '#app'
@@ -54,10 +54,9 @@ Manager = Marionette.Application.extend {
 				if self.getCurrentRoute() is ""
 					self.trigger "home:show"
 
+
 		# import de l'appli entities, session
-		#require('entities/session.coffee')
-		#require('entities/ariane.coffee')
-		Radio = require('backbone.radio')
+		require('entities/session.coffee')
 
 		channel = Radio.channel('entities')
 		@Auth = channel.request('session:entity', historyStart)
