@@ -1,5 +1,5 @@
 <?php
-	define("PATH_TO_MEEKRODB", "../vendor/meekrodb/db.class.php");
+	define("PATH_TO_MEEKRODB", "../vendor/sergeytsalkov/meekrodb/db.class.php");
 	define("PATH_TO_CLASS", "../php/class");
 
 	// Chemin du dossier de config
