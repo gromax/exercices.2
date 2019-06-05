@@ -21,8 +21,7 @@ include "../php/constantes.php";
   <iframe id="zoomframe" style="width: 1px; height: 1px; visibility: hidden;" ></iframe>
 
   <script type="text/javascript">
-  // Mon code Javascript
-  const CAS_ENABLED = <?php echo CAS_ENABLED;?>;
+  const CAS_ENABLED = <?php if (CAS_ENABLED) { echo "true"; } else { echo "false"; }?>;
   </script>
 
 </body>
