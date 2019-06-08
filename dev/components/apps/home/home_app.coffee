@@ -11,7 +11,7 @@ Router = Backbone.Router.extend {
   }
   showHome: ->
     app.Ariane.reset []
-    controller = require("apps/home/show/home_show_controller.coffee")
+    controller = require("apps/home/show/home_show_controller.coffee").controller
     switch
       when app.Auth.isAdmin() then controller.showAdminHome()
       when app.Auth.isProf() then controller.showProfHome()
@@ -22,9 +22,9 @@ Router = Backbone.Router.extend {
       @showHome()
     else
       app.Ariane.reset [{text:"Connexion", link:"login", e:"home:login"}]
-      require("apps/home/login/login_controller.coffee").showLogin()
+      require("apps/home/login/login_controller.coffee").controller.showLogin()
   showReLogin:(options) ->
-    require("apps/home/login/login_controller.coffee").showReLogin()
+    require("apps/home/login/login_controller.coffee").controller.showReLogin()
   logout: ->
     self = @
     if app.Auth.get("logged_in")
@@ -44,7 +44,7 @@ Router = Backbone.Router.extend {
     else
       app.Ariane.reset [{text:"Réinitialisation de mot de passe"}]
       app.trigger("header:loading", true)
-      showController = require("apps/home/show/home_show_controller.coffee")
+      showController = require("apps/home/show/home_show_controller.coffee").controller
       fetching = app.Auth.getWithForgottenKey(key)
       $.when(fetching).done( ()->
         showController.showLogOnForgottenKey(true)
@@ -61,7 +61,7 @@ Router = Backbone.Router.extend {
       app.trigger("notFound")
     else
       app.Ariane.reset [{text:"Échec d'identification par l'ENT"}]
-      showController = require("apps/home/show/home_show_controller.coffee").casloginfailed()
+      require("apps/home/show/home_show_controller.coffee").controller.casloginfailed()
 }
 
 router = new Router()
