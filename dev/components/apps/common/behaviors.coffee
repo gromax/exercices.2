@@ -83,7 +83,7 @@ SubmitClicked = Behavior.extend {
     data = Syphon.serialize(@)
     @view.trigger("form:submit", data)
 
-  onFormDataInvalid: ->
+  onFormDataInvalid: (errors) ->
     $view = @view.$el
     clearFormErrors = () ->
       $form = $view.find("form")
@@ -97,7 +97,7 @@ SubmitClicked = Behavior.extend {
         $(this).removeClass("has-error")
       )
 
-    if @getOptions("messagesDiv")
+    if @getOption("messagesDiv")
       $container = $view.find("#messages")
       markErrors = (value)->
         $errorEl
