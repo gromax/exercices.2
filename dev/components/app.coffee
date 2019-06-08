@@ -1,14 +1,14 @@
-import Marionette from 'backbone.marionette'
+import { Application, View } from 'backbone.marionette'
 import Radio from 'backbone.radio'
 
-Manager = Marionette.Application.extend {
+Manager = Application.extend {
   region: '#app'
   getCurrentRoute: () -> Backbone.history.fragment
   navigate: (route, options) ->
     options or (options = {})
     Backbone.history.navigate(route, options)
   onBeforeStart: (app, options) ->
-    RegionContainer = Marionette.View.extend {
+    RegionContainer = View.extend {
       el: "#app-container"
       regions: {
         header: "#header-region"
@@ -41,12 +41,13 @@ Manager = Marionette.Application.extend {
     @version = VERSION
     self = @
     historyStart = () ->
-      require('apps/home/app_home.coffee')
+      require('apps/home/home_app.coffee')
+      require('apps/ariane/ariane_app.coffee')
       #require('apps/redacteurs/app_redacteurs.coffee')
       #require('apps/joueurs/app_joueurs.coffee')
       #require('apps/evenements/app_evenements.coffee')
       #require('apps/parties/app_parties.coffee')
-      require('apps/header/app_header.coffee')
+      require('apps/header/header_app.coffee')
       # import des différentes app
       self.trigger "header:show"
       if Backbone.history
@@ -59,6 +60,7 @@ Manager = Marionette.Application.extend {
 
     channel = Radio.channel('entities')
     @Auth = channel.request('session:entity', historyStart)
+    @Ariane = require("entities/ariane.coffee").ArianeController
     @settings = {}
 }
 
