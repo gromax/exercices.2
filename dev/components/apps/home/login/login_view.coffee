@@ -6,7 +6,10 @@ import login_tpl from 'templates/home/login/home-login.tpl'
 LoginView = View.extend {
   className:"card"
   template: login_tpl
-  behaviors: [SubmitClicked]
+  behaviors: [{
+    behaviorClass: SubmitClicked
+    messagesDiv: "messages"
+  }]
   showForgotten: false # défault value
   generateTitle: true
   events: {
