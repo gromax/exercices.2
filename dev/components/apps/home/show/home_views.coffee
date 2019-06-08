@@ -1,7 +1,7 @@
 import { View, CollectionView } from 'backbone.marionette'
 import off_tpl from 'templates/home/show/home-off.tpl'
 import notFound_tpl from 'templates/home/show/home-off.tpl'
-import admin_tpl from 'templates/home/show/home-admin-prof.tpl'
+import admin_prof_tpl from 'templates/home/show/home-admin-prof.tpl'
 import eleve_no_devoir_tpl from 'templates/home/show/devoirs-list-eleve-none.tpl'
 import eleve_devoir_item_tpl from 'templates/home/show/devoirs-list-eleve-item.tpl'
 import eleve_layout_tpl from 'templates/home/show/eleve-view-layout.tpl'
@@ -89,7 +89,7 @@ EleveListeDevoirs = CollectionView.extend {
 }
 
 EleveLayout = View.extend {
-  template: eleve-view-layout
+  template: eleve_layout_tpl
   regions: {
     devoirsRegion: "#devoirs-region"
     unfinishedRegion: "#unfinished-region"
