@@ -121,7 +121,21 @@ SubmitClicked = Behavior.extend {
 
     clearFormErrors()
     _.each(errors, markErrors)
-
 }
 
-export { SortList, FilterList, DestroyWarn, SubmitClicked }
+FlashItem = Behavior.extend {
+  preCss: ""
+  onFlashSuccess: ->
+    @flash("success")
+  onFlashError: ->
+    @flash("danger")
+  flash: (cssClass) ->
+    $view = @$el
+    $view.hide().toggleClass(@preCss+cssClass).fadeIn(800, ()->
+      setTimeout( ()->
+        $view.toggleClass(@preCss+cssClass)
+      , 500)
+    )
+}
+
+export { SortList, FilterList, DestroyWarn, SubmitClicked, FlashItem }
