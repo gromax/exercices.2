@@ -31,7 +31,7 @@ OffPanel = View.extend {
 
 AdminProfPanel = View.extend {
   className: "jumbotron"
-  getTemplete: admin_prof_tpl
+  template: admin_prof_tpl
   events: {
     "click a.js-menu-item": "clickMenuItem"
   }
@@ -43,7 +43,7 @@ AdminProfPanel = View.extend {
 
   templateContext: ->
     {
-      adminMode: getOption("adminMode") is true
+      adminMode: @getOption("adminMode") is true
       unread: app.Auth.get("unread")
     }
 }
@@ -68,7 +68,7 @@ EleveDevoirItem = View.extend {
       "list-group-item"
 
   templateContext: ->
-    faits= @getOption("faits").where({aUF: options.model.get("id")})
+    faits = @getOption("faits").where({aUF: options.model.get("id")})
     exofiches = @getOption("exofiches").where({idFiche: options.model.get("idFiche")})
     {
       actif: data.actif && _.has(data,"ficheActive") && data.ficheActive
