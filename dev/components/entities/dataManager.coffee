@@ -18,18 +18,17 @@ API = {
         dataType:'json'
       })
 
-      '''
       request.done( (data)->
         for colName in ask
           colObj = false
           switch colName
-            when "fiches" then colObj = require("entities/fiches.coffee")
-            when "userfiches" then colObj = require("entities/userfiches.coffee")
-            when "exofiches" then colObj = require("entities/exofiches.coffee")
-            when "faits" then colObj = require("entities/faits.coffee")
+            #when "fiches" then colObj = require("entities/fiches.coffee")
+            #when "userfiches" then colObj = require("entities/userfiches.coffee")
+            #when "exofiches" then colObj = require("entities/exofiches.coffee")
+            #when "faits" then colObj = require("entities/faits.coffee")
             when "users" then colObj = require("entities/users.coffee")
-            when "exams" then colObj = require("entities/exams.coffee")
-            when "messages" then colObj = require("entities/messages.coffee")
+            #when "exams" then colObj = require("entities/exams.coffee")
+            #when "messages" then colObj = require("entities/messages.coffee")
             when "classes" then colObj = require("entities/classes.coffee")
           if (colObj isnt false) and (data[colName])
             API.stored_data[colName] = new colObj.Collection(data[colName], { parse:true })
@@ -38,7 +37,6 @@ API = {
       ).fail( (response)->
         defer.reject(response)
       )
-      '''
     return promise = defer.promise()
   getItem: (entityName, idItem) ->
     defer = $.Deferred()
@@ -62,7 +60,6 @@ API = {
         method:'GET'
         dataType:'json'
       })
-
       request.done( (data)->
         User = require("entities/user").Item
         API.stored_data.me = new User(data, {parse:true})
