@@ -12,6 +12,7 @@ include "../php/constantes.php";
 <body>
   <div id="app-container">
     <div id="header-region"></div><br />
+    <div id="ariane-region"></div>
     <div id="message-region"></div>
     <div id="main-region" class="container">
         <div class="alert alert-warning" role="alert"> <i class="fa fa-spinner fa-spin fa-2x fa-fw"></i> Contenu en cours de chargement...</div>
