@@ -72,7 +72,7 @@ class Logged extends User
       if ($pwd==ROOT_PASSWORD)
       {
         $data = array("id"=>-1, "idClasse"=>null, "nom"=>"Root", "prenom"=>"", "email"=>ROOT_USERNAME, "rank"=>User::RANK_ROOT, "pref"=>"{}", "hash"=>"", "cas"=>"");
-        return (new Logged($bdd_result))->updateTime()->setConnectedUser();
+        return (new Logged($data))->updateTime()->setConnectedUser();
       }
     }
     elseif ($identifiant !== ''){
