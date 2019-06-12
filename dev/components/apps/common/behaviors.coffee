@@ -30,15 +30,15 @@ FilterList = Behavior.extend {
   onSetFilterCriterion: (criterion, options) ->
     criterion = criterion.normalize('NFD').replace(/[\u0300-\u036f]/g, "").toLowerCase()
     if criterion is "" or typeof @view.filterKeys is "undefined"
-      @view.removeFilter(filterFct, options)
+      @view.removeFilter(options)
     else
-      filterKeys = @view.filterKeys
-    parseFct = (model) ->
-      reductionFct = (m,k) ->
-        m+model.get(k)
-      _.reduce(filterKeys, reductionFct, "").normalize('NFD').replace(/[\u0300-\u036f]/g, "").toLowerCase()
-    filterFct = (view, index, children) ->
-      parseFct(view.model).indexOf(criterion) isnt -1
+      filterKeys = @view.getOption("filterKeys")
+      parseFct = (model) ->
+        reductionFct = (m,k) ->
+          m+model.get(k)
+        _.reduce(filterKeys, reductionFct, "").normalize('NFD').replace(/[\u0300-\u036f]/g, "").toLowerCase()
+      filterFct = (view, index, children) ->
+        parseFct(view.model).indexOf(criterion) isnt -1
       @view.setFilter(filterFct, options)
 }
 
