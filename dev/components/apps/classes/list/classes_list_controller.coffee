@@ -1,5 +1,6 @@
 import { MnObject } from 'backbone.marionette'
-import { ClassesCollectionView, ClassesPanel, FillClasseView, NewView } from 'apps/classes/list/classes_list_views.coffee'
+import { ClassesCollectionView, ClassesPanel, FillClasseView, NewItemView } from 'apps/classes/list/classes_list_views.coffee'
+import { EditClasseView } from 'apps/classes/edit/edit_classe_view.coffee'
 import { AlertView, ListLayout } from 'apps/common/common_views.coffee'
 import { app } from 'app'
 
@@ -40,7 +41,7 @@ Controller = MnObject.extend {
     channel = @getChannel()
     mainFct = @listMain
     require('entities/dataManager.coffee')
-    fetching = channel.request("classes:entities")
+    fetching = channel.request("custom:entities", ["classes"])
     $.when(fetching).done( (classesList)->
       mainFct(false, classesList)
     ).fail( (response)->
@@ -55,8 +56,8 @@ Controller = MnObject.extend {
     )
 
   listMain: (prof, classesList) ->
-    listItemsLayout = new Layout()
-    listItemsPanel = new Panel {
+    listItemsLayout = new ListLayout()
+    listItemsPanel = new ClassesPanel {
       addToProf: if prof isnt false then prof.get("nomComplet") else false
       showAddButton: prof isnt false or app.Auth.isProf()
     }
@@ -68,7 +69,7 @@ Controller = MnObject.extend {
     else
       filterFct = false
 
-    listItemsView = new ListView {
+    listItemsView = new ClassesCollectionView {
       collection: classesList
       filterFct: filterFct
       showFillClassButton: app.Auth.isAdmin()
@@ -82,7 +83,7 @@ Controller = MnObject.extend {
     listItemsPanel.on "classe:new", ()->
       OClasse = require("entities/classes.coffee").Item
       newItem = new OClasse()
-      view = new NewView {
+      view = new NewItemView {
         model: newItem
       }
 
@@ -94,7 +95,7 @@ Controller = MnObject.extend {
           $.when(savingItem).done( ()->
             classesList.add(newItem)
             view.trigger("dialog:close")
-            listItemsView.flash(newItem)
+            listItemsView.children.findByModel(newItem)?.trigger("flash:success")
           ).fail( (response)->
             switch response.status
               when 422
@@ -112,81 +113,81 @@ Controller = MnObject.extend {
           view.triggerMethod("form:data:invalid",newItem.validationError)
       app.regions.getRegion('dialog').show(view)
 
-		if (prof is false)
-			# en mode classe/prof, je ne permet pas la navigation qui serait de toute façon déroutante
-			listItemsView.on "item:show", (childView, args)->
-				model = childView.model
-				app.trigger("classe:show", model.get("id"))
+    if (prof is false)
+      # en mode classe/prof, je ne permet pas la navigation qui serait de toute façon déroutante
+      listItemsView.on "item:show", (childView)->
+        model = childView.model
+        app.trigger("classe:show", model.get("id"))
 
-		listItemsView.on "item:fill", (childView, args)->
-			model = childView.model
-			view = new FillView {
-				nomProf: model.get("nomOwner")
-			}
+    listItemsView.on "item:fill", (childView)->
+      model = childView.model
+      view = new FillView {
+        nomProf: model.get("nomOwner")
+      }
 
-			view.on "form:submit", (data)->
-				fillingItem = model.fill(data.list)
-				$.when(fillingItem).done( ()->
-					childView.render()
-					view.trigger("dialog:close")
-					childView.flash("success")
-				).fail( (response)->
-					switch response.status
-						when 401
-							alert("Vous devez vous (re)connecter !")
-							view.trigger("dialog:close")
-							app.trigger("home:logout")
-						else
-							alert("Erreur inconnue. Essayez à nouveau ou prévenez l'administrateur [code #{response.status}/003]")
-				)
-			app.regions.getRegion('dialog').show(view)
+      view.on "form:submit", (data)->
+        fillingItem = model.fill(data.list)
+        app.trigger("header:loading", true)
+        $.when(fillingItem).done( ()->
+          childView.render()
+          view.trigger("dialog:close")
+          childView.trigger "flash:success"
+        ).fail( (response)->
+          switch response.status
+            when 401
+              alert("Vous devez vous (re)connecter !")
+              view.trigger("dialog:close")
+              app.trigger("home:logout")
+            else
+              alert("Erreur inconnue. Essayez à nouveau ou prévenez l'administrateur [code #{response.status}/003]")
+        ).always( ()->
+          app.trigger("header:loading", false)
+        )
+      app.regions.getRegion('dialog').show(view)
 
+    listItemsView.on "item:edit", (childView)->
+      model = childView.model
+      view = new EditClasseView {
+        model:model
+      }
 
-		listItemsView.on "item:edit", (childView, args)->
-			model = childView.model
-			view = new EditView {
-				model:model
-			}
+      view.on "form:submit", (data)->
+        updatingItem = model.save(data)
+        if updatingItem
+          app.trigger("header:loading", true)
+          $.when(updatingItem).done( ()->
+            childView.render()
+            view.trigger("dialog:close")
+            childView.trigger "flash:success"
+          ).fail( (response)->
+            switch response.status
+              when 422
+                view.triggerMethod("form:data:invalid", response.responseJSON.ajaxMessages)
+              when 401
+                alert("Vous devez vous (re)connecter !")
+                view.trigger("dialog:close")
+                app.trigger("home:logout")
+              else
+                alert("Erreur inconnue. Essayez à nouveau ou prévenez l'administrateur [code #{response.status}/003]")
+          ).always( ()->
+            app.trigger("header:loading", false)
+          )
+        else
+          @triggerMethod("form:data:invalid", model.validationError)
+      app.regions.getRegion('dialog').show(view)
 
-			view.on "form:submit", (data)->
-				updatingItem = model.save(data)
-				if updatingItem
-					$.when(updatingItem).done( ()->
-						childView.render()
-						view.trigger("dialog:close")
-						childView.flash("success")
-					).fail( (response)->
-						switch response.status
-							when 422
-								view.triggerMethod("form:data:invalid", response.responseJSON.ajaxMessages)
-							when 401
-								alert("Vous devez vous (re)connecter !")
-								view.trigger("dialog:close")
-								app.trigger("home:logout")
-							else
-								alert("Erreur inconnue. Essayez à nouveau ou prévenez l'administrateur [code #{response.status}/003]")
-					)
-				else
-					@triggerMethod("form:data:invalid", model.validationError)
-
-			app.regions.getRegion('dialog').show(view)
-
-		listItemsView.on "item:delete", (childView,e)->
-			#childView.remove()
-			model = childView.model
-			idUser = model.get("id")
-			if confirm("Supprimer la classe « #{model.get('nom')} » ?")
-				destroyRequest = model.destroy()
-				app.trigger("header:loading", true)
-				$.when(destroyRequest).done( ()->
-					childView.remove()
-				).fail( (response)->
-					alert("Erreur. Essayez à nouveau !")
-				).always( ()->
-					app.trigger("header:loading", false)
-				)
-
-		app.regions.getRegion('main').show(listItemsLayout)
+    listItemsView.on "item:delete", (childView)->
+        model = childView.model
+        destroyRequest = model.destroy()
+        app.trigger("header:loading", true)
+        $.when(destroyRequest).done( ()->
+          childView.trigger "remove"
+        ).fail( (response)->
+          alert("Erreur. Essayez à nouveau !")
+        ).always( ()->
+          app.trigger("header:loading", false)
+        )
+    app.regions.getRegion('main').show(listItemsLayout)
 }
 
 export controller = new Controller()
