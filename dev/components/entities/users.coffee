@@ -62,7 +62,7 @@ Item = Backbone.Model.extend {
 
 Collection = Backbone.Collection.extend {
   url: "api/users"
-  model: User
+  model: Item
   comparator: "nomComplet"
 }
 
