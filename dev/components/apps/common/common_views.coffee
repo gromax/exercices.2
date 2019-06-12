@@ -1,5 +1,7 @@
 import { View } from 'backbone.marionette'
 import alert_tpl from 'templates/common/alert-view.tpl'
+import list_layout_tpl from 'templates/common/list-layout.tpl'
+
 
 AlertView = View.extend {
   tag: "div",
@@ -16,4 +18,12 @@ AlertView = View.extend {
     }
 }
 
-export { AlertView }
+ListLayout = View.extend {
+  template: list_layout_tpl
+  regions: {
+    panelRegion: "#panel-region"
+    itemsRegion: "#items-region"
+  }
+}
+
+export { AlertView, ListLayout }
