@@ -25,10 +25,10 @@ ItemView = View.extend {
     }
   ]
   triggers: {
-    "click td a.js-edit": "item:edit"
-    "click td a.js-fill": "item:fill"
-    "click td a.js-classe-prof": "item:classe-prof"
-    "click": "item:show"
+    "click td a.js-edit": "edit"
+    "click td a.js-fill": "fill"
+    "click td a.js-classe-prof": "classe-prof"
+    "click": "show"
   }
 
   templateContext: ->
@@ -80,9 +80,10 @@ FillClasseView = View.extend {
     @title = "Nouvelle classe pour #{@getOption('nomProf')}";
 }
 
-NewView = View.extend {
+NewItemView = View.extend {
   title: "Nouvelle classe"
+  template: new_tpl
   behaviors: [SubmitClicked]
 }
 
-export { ClassesCollectionView, ClassesPanel, FillClasseView, NewView }
+export { ClassesCollectionView, ClassesPanel, FillClasseView, NewItemView }
