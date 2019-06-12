@@ -40,7 +40,7 @@ API = {
     return promise = defer.promise()
   getItem: (entityName, idItem) ->
     defer = $.Deferred()
-    fetching = API.getCustomEntities(entityName)
+    fetching = API.getCustomEntities([entityName])
     $.when(fetching).done( (items)->
       defer.resolve(items.get(idItem))
     )
