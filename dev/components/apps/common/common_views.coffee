@@ -1,6 +1,7 @@
 import { View } from 'backbone.marionette'
 import alert_tpl from 'templates/common/alert-view.tpl'
 import list_layout_tpl from 'templates/common/list-layout.tpl'
+import missing_item_tpl from 'templates/common/missing-item.tpl'
 
 
 AlertView = View.extend {
@@ -18,6 +19,15 @@ AlertView = View.extend {
     }
 }
 
+MissingItemView = View.extend {
+  template: missing_item_tpl
+  message: "Cet item n'existe pas."
+  templateContext: ->
+    {
+      message: @getOption("message")
+    }
+}
+
 ListLayout = View.extend {
   template: list_layout_tpl
   regions: {
@@ -26,4 +36,4 @@ ListLayout = View.extend {
   }
 }
 
-export { AlertView, ListLayout }
+export { AlertView, MissingItemView, ListLayout }
