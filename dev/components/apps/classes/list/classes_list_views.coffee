@@ -5,6 +5,8 @@ import item_view_tpl from 'templates/classes/list/classe-list-item.tpl'
 import classes_view_tpl from 'templates/classes/list/classe-list.tpl'
 import panel_tpl from 'templates/classes/list/classe-list-panel.tpl'
 import fill_tpl from 'templates/classes/list/classe-fill-form.tpl'
+import new_tpl from 'templates/classes/common/classe-form.tpl'
+
 
 NoItemView = View.extend {
   template: no_item_tpl
@@ -74,12 +76,13 @@ ClassesPanel = View.extend {
 FillClasseView = View.extend {
   template: fill_tpl
   behaviors: [SubmitClicked]
-  events: {
-    "click button.js-submit": "submitClicked"
-  }
-
   initialize: ->
     @title = "Nouvelle classe pour #{@getOption('nomProf')}";
 }
 
-export { ClassesCollectionView, ClassesPanel, FillClasseView }
+NewView = View.extend {
+  title: "Nouvelle classe"
+  behaviors: [SubmitClicked]
+}
+
+export { ClassesCollectionView, ClassesPanel, FillClasseView, NewView }
