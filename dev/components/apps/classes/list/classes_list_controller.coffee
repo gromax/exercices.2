@@ -62,19 +62,15 @@ Controller = MnObject.extend {
       showAddButton: prof isnt false or app.Auth.isProf()
     }
 
-    if prof isnt false
-      idProf = prof.get("id")
-      filterFct = (child, index, collection) ->
-        return child.get("idOwner") is idProf
-    else
-      filterFct = false
-
     listItemsView = new ClassesCollectionView {
       collection: classesList
-      filterFct: filterFct
+      filterKeys: ["id", "nom", "prenom"]
       showFillClassButton: app.Auth.isAdmin()
       showProfName: prof is false and app.Auth.isAdmin()
     }
+
+    if prof isnt false
+      listItemsView.trigger "set:filter:criterion", prof.get("id")+prof.get("nom")+prof.get("prenom"), { preventRender: true }
 
     listItemsLayout.on "render", ()->
       listItemsLayout.getRegion('panelRegion').show(listItemsPanel)
@@ -119,9 +115,12 @@ Controller = MnObject.extend {
         model = childView.model
         app.trigger("classe:show", model.get("id"))
 
+    listItemsView.on "item:classes:prof", (childView)->
+      app.trigger "classes:prof", childView.model.get("idOwner")
+
     listItemsView.on "item:fill", (childView)->
       model = childView.model
-      view = new FillView {
+      view = new FillClasseView {
         nomProf: model.get("nomOwner")
       }
 
