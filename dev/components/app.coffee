@@ -12,6 +12,7 @@ Manager = Application.extend {
       el: "#app-container"
       regions: {
         header: "#header-region"
+        ariane: "#ariane-region"
         message: "#message-region"
         main: "#main-region"
         dialog: "#dialog-region"
@@ -43,13 +44,11 @@ Manager = Application.extend {
     historyStart = () ->
       require('apps/home/home_app.coffee')
       require('apps/ariane/ariane_app.coffee')
-      #require('apps/redacteurs/app_redacteurs.coffee')
-      #require('apps/joueurs/app_joueurs.coffee')
-      #require('apps/evenements/app_evenements.coffee')
-      #require('apps/parties/app_parties.coffee')
       require('apps/header/header_app.coffee')
+      require('apps/classes/classes_app.coffee')
       # import des différentes app
       self.trigger "header:show"
+      self.trigger "ariane:show"
       if Backbone.history
         Backbone.history.start()
         if self.getCurrentRoute() is ""
