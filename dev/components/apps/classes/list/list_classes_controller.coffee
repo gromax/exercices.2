@@ -1,5 +1,5 @@
 import { MnObject } from 'backbone.marionette'
-import { ClassesCollectionView, ClassesPanel, FillClasseView, NewItemView } from 'apps/classes/list/classes_list_views.coffee'
+import { ClassesCollectionView, ClassesPanel, FillClasseView, NewItemView } from 'apps/classes/list/list_classes_views.coffee'
 import { EditClasseView } from 'apps/classes/edit/edit_classe_view.coffee'
 import { AlertView, ListLayout } from 'apps/common/common_views.coffee'
 import { app } from 'app'

@@ -12,7 +12,7 @@ Router = Backbone.Router.extend {
     auth = app.Auth
     forProf = ->
       app.Ariane.reset [{ text:"Classes", e:"classes:list", link:"classes"}]
-      require("apps/classes/list/classes_list_controller.coffee").controller.list()
+      require("apps/classes/list/list_classes_controller.coffee").controller.list()
 
     todo = auth.mapItem {
       "Admin": forProf
@@ -54,7 +54,7 @@ Router = Backbone.Router.extend {
     auth = app.Auth
     forAdmin = ->
       app.Ariane.reset [{ text:"Classes", e:"classes:list", link:"classes"}]
-      require("apps/classes/list/classes_list_controller.coffee").controller.list_prof(id)
+      require("apps/classes/list/list_classes_controller.coffee").controller.list_prof(id)
 
     todo = auth.mapItem {
       "Admin": forAdmin
