@@ -73,10 +73,6 @@ UsersCollectionView = CollectionView.extend {
       users_admin_view_tpl
     else
       users_prof_view_tpl
-
 }
-
-
-
 
 export { UsersPanel, UsersCollectionView }
