@@ -175,17 +175,7 @@ Controller = MnObject.extend {
           @triggerMethod("form:data:invalid", model.validationError)
       app.regions.getRegion('dialog').show(view)
 
-    listItemsView.on "item:delete", (childView)->
-        model = childView.model
-        destroyRequest = model.destroy()
-        app.trigger("header:loading", true)
-        $.when(destroyRequest).done( ()->
-          childView.trigger "remove"
-        ).fail( (response)->
-          alert("Erreur. Essayez à nouveau !")
-        ).always( ()->
-          app.trigger("header:loading", false)
-        )
+
     app.regions.getRegion('main').show(listItemsLayout)
 }
 
