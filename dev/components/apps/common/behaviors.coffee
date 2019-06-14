@@ -54,16 +54,23 @@ DestroyWarn = Behavior.extend {
   warnBeforeDestroy: (e) ->
     e.preventDefault()
     e.stopPropagation() # empêche la propagation d'un click à l'élément parent dans le dom
-    message = "Supprimer l'élément ##{@view.model.get("id")} ?";
+    model = @view.model
+    message = "Supprimer l'élément ##{model.get("id")} ?";
     if confirm(message)
-      @view.trigger("delete", @view)
-
-  onRemove: ->
-    view = @view
-    view.$el.fadeOut( ()->
-      view.trigger("model:destroy", view.model)
-      view.remove()
-    )
+      app = require('app').app
+      destroyRequest = model.destroy()
+      app.trigger("header:loading", true)
+      $.when(destroyRequest).done( ->
+        view = @view
+        view.$el.fadeOut( ->
+          view.trigger("model:destroy", view.model)
+          view.remove()
+        )
+      ).fail( (response)->
+        alert("Erreur. Essayez à nouveau !")
+      ).always( ()->
+        app.trigger("header:loading", false)
+      )
 }
 
 SubmitClicked = Behavior.extend {
@@ -138,4 +145,68 @@ FlashItem = Behavior.extend {
     )
 }
 
-export { SortList, FilterList, DestroyWarn, SubmitClicked, FlashItem }
+NewItemInList = Behavior.extend {
+  onFormSubmit: (data)->
+    newItem = @view.model
+    savingItem = newItem.save(data)
+    if savingItem
+      app = require('app').app
+      app.trigger "header:loading", true
+      $.when(savingItem).done( ->
+        @view.getOption("collection")?.add newItem
+        @view.trigger "dialog:close"
+        @view.getOption("listView")?.children.findByModel(newItem)?.trigger("flash:success")
+      ).fail( (response)->
+        switch response.status
+          when 422
+            @view.trigger "form:data:invalid", response.responseJSON.errors
+          when 401
+            alert("Vous devez vous (re)connecter !")
+            @view.trigger("dialog:close")
+            app.trigger("home:logout")
+          else
+            if errorCode = @view.getOption("errorCode")
+              errorCode = "/#{errorCode}"
+            else
+              errorCode = ""
+            alert("Erreur inconnue. Essayez à nouveau ou prévenez l'administrateur [code #{response.status}#{errorCode}]")
+      ).always(()->
+        app.trigger("header:loading", false)
+      )
+    else
+      @view.trigger "form:data:invalid",newItem.validationError
+}
+
+EditItemInList = Behavior.extend {
+  onEditSubmit: (data, itemView, errorCode)->
+    model = @view.model
+    updatingItem = model.save(data)
+    if updatingItem
+      app = require('app').app
+      app.trigger "header:loading", true
+      $.when(updatingItem).done( ->
+        itemView.render()
+        @view.trigger "dialog:close"
+        itemView.trigger("flash:success")
+      ).fail( (response)->
+        switch response.status
+          when 422
+            @view.trigger "form:data:invalid", response.responseJSON.errors
+          when 401
+            alert("Vous devez vous (re)connecter !")
+            @view.trigger("dialog:close")
+            app.trigger("home:logout")
+          else
+            if errorCode
+              errorCode = "/#{errorCode}"
+            else
+              errorCode = ""
+            alert("Erreur inconnue. Essayez à nouveau ou prévenez l'administrateur [code #{response.status}#{errorCode}]")
+      ).always(()->
+        app.trigger("header:loading", false)
+      )
+    else
+      @view.trigger "form:data:invalid",newItem.validationError
+}
+
+export { SortList, FilterList, DestroyWarn, SubmitClicked, FlashItem, NewItemInList, EditItemInList }
