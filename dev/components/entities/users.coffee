@@ -41,6 +41,8 @@ Item = Backbone.Model.extend {
     if @get("rank") is "Root"
       errors.email = "Root ne peut être modifié"
     else
+      if (typeof attrs.pwd isnt "undefined") and (typeof attrs.pwdConfirm isnt "undefined") and (attrs.pwd isnt attrs.pwdConfirm)
+        errors.pwdConfirm = "Les mots de passe sont différents."
       if not attrs.prenom
         errors.prenom = "Ne doit pas être vide"
       if not attrs.nom
