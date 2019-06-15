@@ -4,7 +4,7 @@ import { NewUserView, EditUserView, EditPwdUserView } from 'apps/users/edit/edit
 import { AlertView, MissingItemView, ListLayout } from 'apps/common/common_views.coffee'
 import { app } from 'app'
 
-Controller = Marionette.Object.extend {
+Controller = MnObject.extend {
   channelName: 'entities'
   listUsers: (criterion)->
     criterion = criterion ? ""
@@ -23,12 +23,13 @@ Controller = Marionette.Object.extend {
     $.when(fetchingUsers).done( (users) ->
       usersListView = new UsersCollectionView {
         collection: users
+        adminMode: app.Auth.isAdmin()
       }
 
       usersListView.trigger "set:filter:criterion", criterion, { preventRender:false }
 
-      usersListPanel.on "users:filter", (filterCriterion)->
-        usersListView.triggerMethod "set:filter:criterion", filterCriterion, { preventRender:false }
+      usersListPanel.on "items:filter", (filterCriterion)->
+        usersListView.trigger "set:filter:criterion", filterCriterion, { preventRender:false }
         app.trigger("users:filter", filterCriterion)
 
       usersListLayout.on "render", ->
@@ -53,26 +54,26 @@ Controller = Marionette.Object.extend {
       usersListView.on "item:edit", (childView, args)->
         model = childView.model
         editView = new EditUserView {
-          model:model
-          editorIsAdmin:app.Auth.isAdmin()
+          model: model
+          itemView: childView
+          errorCode: "031"
+          editorIsAdmin: app.Auth.isAdmin()
         }
-
-        editView.on "form:submit", (data)->
-          editView.trigger "edit:submit", data, childView, "031"
 
         app.regions.getRegion('dialog').show(editView)
 
       usersListView.on "item:editPwd", (childView, args)->
         model = childView.model
         editPwdView = new EditPwdUserView {
-          model:model
+          model: model
+          itemView: childView
+          errorCode: "032"
+          onFormSubmit: (data)->
+            if data.pwd isnt data.pwdConfirm
+              editPwdView.trigger "form:data:invalid", { pwdConfirm:"Les mots de passe sont différents." }
+            else
+              editPwdView.trigger "edit:submit", _.omit(data,"pwdConfirm")
         }
-
-        editPwdView.on "form:submit", (data)->
-          if data.pwd isnt data.pwdConfirm
-            editPwdView.trigger "form:data:invalid", { pwdConfirm:"Les mots de passe sont différents." }
-          else
-            editPwdView.trigger "edit:submit", _.omit(data,"pwdConfirm"), childView, "032"
 
         app.regions.getRegion('dialog').show(editPwdView)
 
