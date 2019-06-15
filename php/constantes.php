@@ -33,6 +33,7 @@
 	if (file_exists("../php/config/casConfig.php"))
 	{
 		require_once("../php/config/casConfig.php");
+		define("CAS_ENABLED", true);
 	}
 	else
 	{
