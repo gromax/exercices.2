@@ -148,7 +148,7 @@ FlashItem = Behavior.extend {
     )
 }
 
-NewItemInList = Behavior.extend {
+NewItem = Behavior.extend {
   onFormSubmit: (data)->
     newItem = @view.model
     savingItem = newItem.save(data)
@@ -181,7 +181,8 @@ NewItemInList = Behavior.extend {
       @view.trigger "form:data:invalid",newItem.validationError
 }
 
-EditItemInList = Behavior.extend {
+EditItem = Behavior.extend {
+  updatingFunctionName: "save"
   onFormSubmit: (data)->
     fct = @view.getOption "onFormSubmit"
     if (typeof fct is "function")
@@ -190,16 +191,19 @@ EditItemInList = Behavior.extend {
       @onEditSubmit data
   onEditSubmit: (data)->
     model = @view.model
-    updatingItem = model.save(data)
+    updatingFunctionName = @getOption("updatingFunctionName")
+    updatingItem = model[updatingFunctionName](data)
     if updatingItem
       app = require('app').app
       app.trigger "header:loading", true
       view = @view
       $.when(updatingItem).done( ->
         itemView = view.getOption("itemView")
+        onSuccess = view.getOption("onSuccess")
         itemView?.render()
-        view.trigger "dialog:close"
+        view.trigger "dialog:close" # si ce n'est pas une vue dialog, le trigger ne fait rien
         itemView?.trigger("flash:success")
+        onSuccess?(model,data)
       ).fail( (response)->
         switch response.status
           when 422
@@ -218,7 +222,7 @@ EditItemInList = Behavior.extend {
         app.trigger("header:loading", false)
       )
     else
-      @view.trigger "form:data:invalid",newItem.validationError
+      @view.trigger "form:data:invalid",model.validationError
 }
 
-export { SortList, FilterList, DestroyWarn, SubmitClicked, FlashItem, NewItemInList, EditItemInList }
+export { SortList, FilterList, DestroyWarn, SubmitClicked, FlashItem, NewItem, EditItem }
