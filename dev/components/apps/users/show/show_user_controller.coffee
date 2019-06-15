@@ -24,10 +24,10 @@ Controller = MnObject.extend {
           model: user
         }
 
-        view.on "user:edit", ->
+        view.on "click:edit", ->
           app.trigger("user:edit", user.get("id"))
 
-        view.on "user:editPwd", ->
+        view.on "click:edit:pwd", ->
           app.trigger("user:editPwd", user.get("id"))
 
       else
