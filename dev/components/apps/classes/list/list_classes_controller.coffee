@@ -1,6 +1,6 @@
 import { MnObject } from 'backbone.marionette'
-import { ClassesCollectionView, ClassesPanel, FillClasseView, NewItemView } from 'apps/classes/list/list_classes_views.coffee'
-import { EditClasseView } from 'apps/classes/edit/edit_classe_view.coffee'
+import { ClassesCollectionView, ClassesPanel } from 'apps/classes/list/list_classes_views.coffee'
+import { EditClasseView, NewClasseView, FillClasseView } from 'apps/classes/edit/edit_classe_views.coffee'
 import { AlertView, ListLayout } from 'apps/common/common_views.coffee'
 import { app } from 'app'
 
@@ -79,34 +79,12 @@ Controller = MnObject.extend {
     listItemsPanel.on "classe:new", ()->
       OClasse = require("entities/classes.coffee").Item
       newItem = new OClasse()
-      view = new NewItemView {
+      view = new NewClasseView {
         model: newItem
+        errorCode: "002"
+        collection: classesList
+        listView: listItemsView
       }
-
-      view.on "form:submit", (data)->
-        if prof isnt false then data.idOwner = prof.get("id")
-        savingItem = newItem.save(data)
-        if savingItem
-          app.trigger("header:loading", true)
-          $.when(savingItem).done( ()->
-            classesList.add(newItem)
-            view.trigger("dialog:close")
-            listItemsView.children.findByModel(newItem)?.trigger("flash:success")
-          ).fail( (response)->
-            switch response.status
-              when 422
-                view.triggerMethod("form:data:invalid", response.responseJSON.ajaxMessages)
-              when 401
-                alert("Vous devez vous (re)connecter !")
-                view.trigger("dialog:close")
-                app.trigger("home:logout")
-              else
-                alert("Erreur inconnue. Essayez à nouveau ou prévenez l'administrateur [code #{response.status}/002]")
-          ).always( ()->
-            app.trigger("header:loading", false)
-          )
-        else
-          view.triggerMethod("form:data:invalid",newItem.validationError)
       app.regions.getRegion('dialog').show(view)
 
     if (prof is false)
@@ -122,57 +100,17 @@ Controller = MnObject.extend {
       model = childView.model
       view = new FillClasseView {
         nomProf: model.get("nomOwner")
+        itemView: childView
+        errorCode: "003"
       }
-
-      view.on "form:submit", (data)->
-        fillingItem = model.fill(data.list)
-        app.trigger("header:loading", true)
-        $.when(fillingItem).done( ()->
-          childView.render()
-          view.trigger("dialog:close")
-          childView.trigger "flash:success"
-        ).fail( (response)->
-          switch response.status
-            when 401
-              alert("Vous devez vous (re)connecter !")
-              view.trigger("dialog:close")
-              app.trigger("home:logout")
-            else
-              alert("Erreur inconnue. Essayez à nouveau ou prévenez l'administrateur [code #{response.status}/003]")
-        ).always( ()->
-          app.trigger("header:loading", false)
-        )
-      app.regions.getRegion('dialog').show(view)
 
     listItemsView.on "item:edit", (childView)->
       model = childView.model
       view = new EditClasseView {
-        model:model
+        model: model
+        itemView: childView
+        errorCode: "003"
       }
-
-      view.on "form:submit", (data)->
-        updatingItem = model.save(data)
-        if updatingItem
-          app.trigger("header:loading", true)
-          $.when(updatingItem).done( ()->
-            childView.render()
-            view.trigger("dialog:close")
-            childView.trigger "flash:success"
-          ).fail( (response)->
-            switch response.status
-              when 422
-                view.triggerMethod("form:data:invalid", response.responseJSON.ajaxMessages)
-              when 401
-                alert("Vous devez vous (re)connecter !")
-                view.trigger("dialog:close")
-                app.trigger("home:logout")
-              else
-                alert("Erreur inconnue. Essayez à nouveau ou prévenez l'administrateur [code #{response.status}/003]")
-          ).always( ()->
-            app.trigger("header:loading", false)
-          )
-        else
-          @triggerMethod("form:data:invalid", model.validationError)
       app.regions.getRegion('dialog').show(view)
 
 
