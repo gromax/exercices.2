@@ -34,41 +34,22 @@ Controller = MnObject.extend {
             { text:textLink, e:trigger, data:user.get("id"), link:"user:"+user.get("id")+"/edit" }
           ]
 
-        if pwd id true
-          view = new EditPwdUserView {
-            model: user
-            generateTitle: true
-            editorIsAdmin: isAdmin
-          }
+        if pwd is true
+          OView = EditPwdUserView
         else
-          view = new EditUserView {
-            model: user
-            generateTitle: true
-            editorIsAdmin: isAdmin
-          }
+          OView = EditUserView
 
-        view.on "form:submit", (data) ->
-          app.trigger("header:loading", true)
-          updatingUser = user.save(_.omit(data,"pwdConfirm"))
-          if updatingUser
-            $.when(updatingUser).done( ()->
-              if isMe
-                app.Auth.set(data) # met à jour nom, prénom et pref
-              app.trigger("user:show", user.get("id"));
-            ).fail( (response)->
-              switch response.status
-                when 422
-                  view.triggerMethod("form:data:invalid", response.responseJSON.errors)
-                when 401
-                  alert("Vous devez vous (re)connecter !")
-                  app.trigger("home:logout")
-                else
-                  alert("Erreur inconnue. Essayez à nouveau ou prévenez l'administrateur [code #{response.status}/028]")
-            ).always( ()->
-              app.trigger("header:loading", false)
-            )
-          else
-            view.triggerMethod("form:data:invalid", user.validationError)
+        view = new OView {
+          model: user
+          generateTitle: true
+          editorIsAdmin: isAdmin
+          errorCode: "028"
+          onSuccess: (model, data)->
+            if isMe
+              app.Auth.set(data) # met à jour nom, prénom et pref
+            app.trigger "user:show", model.get("id")
+        }
+
       else
         if isMe
           app.Ariane.add [
