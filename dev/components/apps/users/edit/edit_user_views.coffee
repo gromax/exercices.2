@@ -1,5 +1,5 @@
 import { View } from 'backbone.marionette'
-import { SubmitClicked, NewItemInList, EditItemInList } from 'apps/common/behaviors.coffee'
+import { SubmitClicked, NewItem, EditItem } from 'apps/common/behaviors.coffee'
 
 import edit_user_tpl from 'templates/users/edit/user-form.tpl'
 import edit_pwd_user_tpl from 'templates/users/edit/userpwd-form.tpl'
@@ -12,7 +12,7 @@ EditUserView = View.extend {
   editorIsAdmin: false
   generateTitle: false
   template: edit_user_tpl
-  behaviors: [SubmitClicked, EditItemInList]
+  behaviors: [SubmitClicked, EditItem]
   initialize: ->
     @title = "Modifier #{@model.get('prenom')} #{@model.get('nom')}"
   templateContext: ->
@@ -30,7 +30,7 @@ EditUserView = View.extend {
 
 EditPwdUserView = View.extend {
   template: edit_pwd_user_tpl
-  behaviors: [SubmitClicked, EditItemInList]
+  behaviors: [SubmitClicked, EditItem]
   title: "Modifier le mot de passe"
   generateTitle: false
   onRender: ->
@@ -46,7 +46,7 @@ NewUserView = View.extend {
   ranks:1
   editorIsAdmin: true
   template: edit_user_tpl
-  behaviors: [ SubmitClicked, NewItemInList ]
+  behaviors: [ SubmitClicked, NewItem ]
   templateContext: ->
     {
       showPWD: @getOption "showPWD"
