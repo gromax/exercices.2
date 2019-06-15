@@ -13,14 +13,14 @@ SortList = Behavior.extend {
     if collection.comparatorAttr is tag
       collection.comparatorAttr = "inv_"+tag
       collection.comparator = (a,b)->
-      if a.get(tag)>b.get(tag)
-        -1
-      else
-        1
+        if a.get(tag)>b.get(tag)
+          -1
+        else
+          1
     else
        collection.comparatorAttr = tag
        collection.comparator = tag
-       collection.sort()
+    collection.sort()
 }
 
 FilterList = Behavior.extend {
@@ -29,7 +29,7 @@ FilterList = Behavior.extend {
       @view.trigger("set:filter:criterion",@view.options.filterCriterion, { preventRender: true })
   onSetFilterCriterion: (criterion, options) ->
     criterion = criterion.normalize('NFD').replace(/[\u0300-\u036f]/g, "").toLowerCase()
-    if criterion is "" or typeof @view.filterKeys is "undefined"
+    if criterion is "" or typeof @view.getOption("filterKeys") is "undefined"
       @view.removeFilter(options)
     else
       filterKeys = @view.getOption("filterKeys")
@@ -131,16 +131,19 @@ SubmitClicked = Behavior.extend {
 }
 
 FlashItem = Behavior.extend {
-  preCss: ""
   onFlashSuccess: ->
     @flash("success")
   onFlashError: ->
     @flash("danger")
   flash: (cssClass) ->
     $view = @$el
-    $view.hide().toggleClass(@preCss+cssClass).fadeIn(800, ()->
+    if @view.tagName is "tr"
+      preCss = "table-" # dans Bootstrap
+    else
+      preCss = ""
+    $view.hide().toggleClass(preCss+cssClass).fadeIn(800, ()->
       setTimeout( ()->
-        $view.toggleClass(@preCss+cssClass)
+        $view.toggleClass(preCss+cssClass)
       , 500)
     )
 }
@@ -152,20 +155,21 @@ NewItemInList = Behavior.extend {
     if savingItem
       app = require('app').app
       app.trigger "header:loading", true
+      view = @view
       $.when(savingItem).done( ->
-        @view.getOption("collection")?.add newItem
-        @view.trigger "dialog:close"
-        @view.getOption("listView")?.children.findByModel(newItem)?.trigger("flash:success")
+        view.getOption("collection")?.add newItem
+        view.trigger "dialog:close"
+        view.getOption("listView")?.children.findByModel(newItem)?.trigger("flash:success")
       ).fail( (response)->
         switch response.status
           when 422
-            @view.trigger "form:data:invalid", response.responseJSON.errors
+            view.trigger "form:data:invalid", response.responseJSON.errors
           when 401
             alert("Vous devez vous (re)connecter !")
-            @view.trigger("dialog:close")
+            view.trigger("dialog:close")
             app.trigger("home:logout")
           else
-            if errorCode = @view.getOption("errorCode")
+            if errorCode = view.getOption("errorCode")
               errorCode = "/#{errorCode}"
             else
               errorCode = ""
@@ -178,26 +182,34 @@ NewItemInList = Behavior.extend {
 }
 
 EditItemInList = Behavior.extend {
-  onEditSubmit: (data, itemView, errorCode)->
+  onFormSubmit: (data)->
+    fct = @view.getOption "onFormSubmit"
+    if (typeof fct is "function")
+      fct(data)
+    else
+      @onEditSubmit data
+  onEditSubmit: (data)->
     model = @view.model
     updatingItem = model.save(data)
     if updatingItem
       app = require('app').app
       app.trigger "header:loading", true
+      view = @view
       $.when(updatingItem).done( ->
-        itemView.render()
-        @view.trigger "dialog:close"
-        itemView.trigger("flash:success")
+        itemView = view.getOption("itemView")
+        itemView?.render()
+        view.trigger "dialog:close"
+        itemView?.trigger("flash:success")
       ).fail( (response)->
         switch response.status
           when 422
-            @view.trigger "form:data:invalid", response.responseJSON.errors
+            view.trigger "form:data:invalid", response.responseJSON.errors
           when 401
             alert("Vous devez vous (re)connecter !")
-            @view.trigger("dialog:close")
+            view.trigger("dialog:close")
             app.trigger("home:logout")
           else
-            if errorCode
+            if errorCode = view.getOption("errorCode")
               errorCode = "/#{errorCode}"
             else
               errorCode = ""
