@@ -43,9 +43,10 @@ NoUserView = View.extend {
 
 UserView = View.extend {
   tagName: "tr"
+  adminMode: false
   behaviors: [DestroyWarn, FlashItem]
   getTemplate: (data)->
-    if app.Auth.isAdmin()
+    if @getOption "adminMode"
       item_admin_view_tpl
     else
       item_prof_view_tpl
@@ -67,9 +68,13 @@ UsersCollectionView = CollectionView.extend {
   behaviors: [FilterList, SortList]
   childViewEventPrefix: "item"
   childViewContainer: "tbody"
-
+  filterKeys: ["nom", "prenom", "nomClasse"]
+  childViewOptions: ->
+    {
+      adminMode: @getOption "adminMode"
+    }
   getTemplate: (data)->
-    if @getOption("adminMode")
+    if @getOption "adminMode"
       users_admin_view_tpl
     else
       users_prof_view_tpl
