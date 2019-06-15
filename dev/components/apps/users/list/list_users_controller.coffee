@@ -68,11 +68,6 @@ Controller = MnObject.extend {
           model: model
           itemView: childView
           errorCode: "032"
-          onFormSubmit: (data)->
-            if data.pwd isnt data.pwdConfirm
-              editPwdView.trigger "form:data:invalid", { pwdConfirm:"Les mots de passe sont différents." }
-            else
-              editPwdView.trigger "edit:submit", _.omit(data,"pwdConfirm")
         }
 
         app.regions.getRegion('dialog').show(editPwdView)
