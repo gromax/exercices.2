@@ -26,6 +26,7 @@ EditUserView = View.extend {
     if @getOption "generateTitle"
       $title = $("<h1>", { text: @title })
       @$el.prepend($title)
+}
 
 EditPwdUserView = View.extend {
   template: edit_pwd_user_tpl
