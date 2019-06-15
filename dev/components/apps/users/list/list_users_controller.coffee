@@ -1,6 +1,6 @@
 import { MnObject } from 'backbone.marionette'
 import { UsersPanel, UsersCollectionView } from 'apps/users/list/list_users_views.coffee'
-import { NewUserView, EditUserView, EditPwdUserView } from 'apps/users/edit/edit_user_view.coffee'
+import { NewUserView, EditUserView, EditPwdUserView } from 'apps/users/edit/edit_user_views.coffee'
 import { AlertView, MissingItemView, ListLayout } from 'apps/common/common_views.coffee'
 import { app } from 'app'
 
