@@ -8,9 +8,12 @@ SortList = Behavior.extend {
 
   sortFct: (e)->
     e.preventDefault()
-    tag = $(e.currentTarget).attr("sort")
+    @view.$el.find(".js-sort-icon").remove()
+    $sortEl = $(e.currentTarget)
+    tag = $sortEl.attr("sort")
     collection = @view.collection
     if collection.comparatorAttr is tag
+      $sortEl.append("<span class='js-sort-icon'>&nbsp;<i class='fa fa-sort-amount-desc'></i></span>")
       collection.comparatorAttr = "inv_"+tag
       collection.comparator = (a,b)->
         if a.get(tag)>b.get(tag)
@@ -18,9 +21,11 @@ SortList = Behavior.extend {
         else
           1
     else
+       $sortEl.append("<span class='js-sort-icon'>&nbsp;<i class='fa fa-sort-amount-asc'></i></span>")
        collection.comparatorAttr = tag
        collection.comparator = tag
     collection.sort()
+
 }
 
 FilterList = Behavior.extend {
@@ -191,7 +196,7 @@ EditItem = Behavior.extend {
       @onEditSubmit data
   onEditSubmit: (data)->
     model = @view.model
-    updatingFunctionName = @getOption("updatingFunctionName")
+    updatingFunctionName = @getOption "updatingFunctionName"
     updatingItem = model[updatingFunctionName](data)
     if updatingItem
       app = require('app').app
@@ -217,12 +222,43 @@ EditItem = Behavior.extend {
               errorCode = "/#{errorCode}"
             else
               errorCode = ""
-            alert("Erreur inconnue. Essayez à nouveau ou prévenez l'administrateur [code #{response.status}#{errorCode}]")
+            alert "Erreur inconnue. Essayez à nouveau ou prévenez l'administrateur [code #{response.status}#{errorCode}]"
       ).always(()->
-        app.trigger("header:loading", false)
+        app.trigger "header:loading", false
       )
     else
       @view.trigger "form:data:invalid",model.validationError
 }
 
-export { SortList, FilterList, DestroyWarn, SubmitClicked, FlashItem, NewItem, EditItem }
+ToggleItemValue = Behavior.extend {
+  onToggleAttribute: (attributeName) ->
+    model = @view.model
+    attributeValue = model.get(attributeName)
+    model.set(attributeName, !attributeValue)
+    updatingItem = model.save()
+    self = @
+    if updatingItem
+      app = require('app').app
+      app.trigger "header:loading", true
+      $.when(updatingItem).done( ->
+        self.view.render()
+        self.view.trigger "flash:success"
+      ).fail( (response)->
+        if response.status is 401
+          alert "Vous devez vous (re)connecter !"
+          app.trigger "home:logout"
+        else
+          if errorCode = self.getOption("errorCode")
+            errorCode = "/#{errorCode}"
+          else
+            errorCode = ""
+          alert "Erreur inconnue. Essayez à nouveau ou prévenez l'administrateur [code #{response.status}#{errorCode}]"
+      ).always( ()->
+        app.trigger "header:loading", false
+      )
+    else
+      @view.trigger "flash:error"
+
+}
+
+export { SortList, FilterList, DestroyWarn, SubmitClicked, FlashItem, NewItem, EditItem, ToggleItemValue }
