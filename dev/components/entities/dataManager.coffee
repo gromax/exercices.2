@@ -22,7 +22,7 @@ API = {
         for colName in ask
           colObj = false
           switch colName
-            #when "fiches" then colObj = require("entities/fiches.coffee")
+            when "devoirs" then colObj = require("entities/devoirs.coffee")
             #when "userfiches" then colObj = require("entities/userfiches.coffee")
             #when "exofiches" then colObj = require("entities/exofiches.coffee")
             #when "faits" then colObj = require("entities/faits.coffee")
@@ -84,13 +84,13 @@ API = {
     if (API.stored_data.messages)
       delete API.stored_data.messages
 
-  ficheDestroyUpdate: (idFiche) ->
+  ficheDestroyUpdate: (idDevoir) ->
     # Assure le cache quand un user est supprimé
     if API.stored_data.userfiches
-      userfichesToPurge = API.stored_data.userfiches.where({idFiche : idFiche})
+      userfichesToPurge = API.stored_data.userfiches.where({idFiche : idDevoir})
       API.stored_data.userfiches.remove(userfichesToPurge)
     if API.stored_data.exofiches
-      exofichesToPurge = API.stored_data.exofiches.where({idFiche : idFiche})
+      exofichesToPurge = API.stored_data.exofiches.where({idFiche : idDevoir})
       API.stored_data.exofiches.remove(exofichesToPurge)
     if API.stored_data.faits
       delete API.stored_data.faits
