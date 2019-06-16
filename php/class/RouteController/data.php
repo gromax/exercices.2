@@ -160,14 +160,14 @@ class data
         if ($uLog->isProf())
         {
             $output = array();
-            if (in_array("fiches", $asks)){
+            if (in_array("devoirs", $asks)){
                 $answer = Fiche::getList(array("owner"=> $uLog->getId() ));
                 if (isset($answer["error"]) && $answer["error"]) {
                     EC::addError($answer["message"]);
                     EC::set_error_code(501);
                     return false;
                 } else {
-                    $output["fiches"] = Fiche::getList(array("owner"=> $uLog->getId() ));
+                    $output["devoirs"] = Fiche::getList(array("owner"=> $uLog->getId() ));
                 }
             }
 
@@ -248,14 +248,14 @@ class data
 
         if ($uLog->isAdmin()) {
             $output = array();
-            if (in_array("fiches", $asks)){
+            if (in_array("devoirs", $asks)){
                 $answer = Fiche::getList();
                 if (isset($answer["error"]) && $answer["error"]) {
                     EC::addError($answer["message"]);
                     EC::set_error_code(501);
                     return false;
                 } else {
-                    $output["fiches"] = $answer;
+                    $output["devoirs"] = $answer;
                 }
             }
 
