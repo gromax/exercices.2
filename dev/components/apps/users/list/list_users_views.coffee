@@ -1,5 +1,5 @@
 import { View, CollectionView } from 'backbone.marionette'
-import { DestroyWarn, FlashItem, SubmitClicked, FilterList, SortList } from 'apps/common/behaviors.coffee'
+import { DestroyWarn, FlashItem, FilterList, SortList } from 'apps/common/behaviors.coffee'
 import users_panel_tpl from 'templates/users/list/user-list-panel.tpl'
 import no_item_tpl from 'templates/users/list/user-list-none.tpl'
 import item_admin_view_tpl from 'templates/users/list/user-list-admin-item.tpl'
