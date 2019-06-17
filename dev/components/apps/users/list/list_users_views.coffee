@@ -1,5 +1,5 @@
 import { View, CollectionView } from 'backbone.marionette'
-import { DestroyWarn, FlashItem, FilterList, SortList } from 'apps/common/behaviors.coffee'
+import { DestroyWarn, FlashItem, FilterList, SortList, FilterPanel } from 'apps/common/behaviors.coffee'
 import users_panel_tpl from 'templates/users/list/user-list-panel.tpl'
 import no_item_tpl from 'templates/users/list/user-list-none.tpl'
 import item_admin_view_tpl from 'templates/users/list/user-list-admin-item.tpl'
@@ -9,30 +9,16 @@ import users_prof_view_tpl from 'templates/users/list/user-list-prof.tpl'
 
 UsersPanel = View.extend {
   template: users_panel_tpl
-  filterCriterion: ""
   showAddButton: false
+  behaviors: [FilterPanel]
   triggers: {
     "click button.js-new": "user:new"
   }
-  events: {
-    "submit #filter-form": "applyFilter"
-  }
-  ui: {
-    criterion: "input.js-filter-criterion"
-  }
   templateContext: ->
     {
-      filterCriterion: @getOption("filterCriterion")
+      filterCriterion: @getOption("filterCriterion") || ""
       showAddButton: @getOption("showAddButton")
     }
-
-  applyFilter: (e)->
-    e.preventDefault()
-    criterion = @ui.criterion.val()
-    @trigger("items:filter", criterion)
-
-  onSetFilterCriterion: (criterion)->
-    @ui.criterion.val(criterion)
 }
 
 NoUserView = View.extend {
