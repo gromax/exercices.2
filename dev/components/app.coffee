@@ -48,6 +48,7 @@ Manager = Application.extend {
       require('apps/classes/classes_app.coffee')
       require('apps/users/users_app.coffee')
       require('apps/devoirs/devoirs_app.coffee')
+      require('apps/exercices/exercices_app.coffee')
       # import des différentes app
       self.trigger "header:show"
       self.trigger "ariane:show"
