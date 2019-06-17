@@ -60,8 +60,8 @@ Router = Backbone.Router.extend {
 router = new Router()
 
 app.on "users:list", ->
-	app.navigate "users"
-	router.listUsers()
+  app.navigate "users"
+  router.listUsers()
 
 app.on "users:filter", (criterion) ->
   if criterion
