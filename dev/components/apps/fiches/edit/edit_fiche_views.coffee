@@ -1,10 +1,10 @@
 import { View } from 'backbone.marionette'
 import { SubmitClicked, NewItem, EditItem } from 'apps/common/behaviors.coffee'
-import layout_tpl from 'templates/devoirs/edit/edit-devoir-layout.tpl'
-import edit_devoir_tpl from 'templates/devoirs/edit/devoir-description-edit.tpl'
+import layout_tpl from 'templates/fiches/edit/edit-fiche-layout.tpl'
+import edit_fiche_tpl from 'templates/fiches/edit/fiche-description-edit.tpl'
 
 
-DevoirLayout = View.extend {
+FicheLayout = View.extend {
   template: layout_tpl
   regions: {
     tabsRegion: "#tabs-region"
@@ -13,16 +13,16 @@ DevoirLayout = View.extend {
   }
 }
 
-NewDevoirView = View.extend {
-  title: "Nouveau Devoir"
-  template: edit_devoir_tpl
+NewFicheView = View.extend {
+  title: "Nouvelle fiche"
+  template: edit_fiche_tpl
   behaviors: [ SubmitClicked, NewItem ]
 }
 
-EditDevoirView = View.extend {
-  template: edit_devoir_tpl
+EditFicheView = View.extend {
+  template: edit_fiche_tpl
   behaviors: [SubmitClicked, EditItem]
-  title: "Modifier le devoir"
+  title: "Modifier le fiche"
   generateTitle: false
   onRender: ->
     if @getOption "generateTitle"
@@ -30,8 +30,4 @@ EditDevoirView = View.extend {
       @$el.prepend($title)
 }
 
-
-
-
-
-export { DevoirLayout }
+export { FicheLayout, NewFicheView, EditFicheView }

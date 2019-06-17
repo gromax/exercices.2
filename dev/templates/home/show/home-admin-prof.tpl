@@ -5,5 +5,5 @@
   <a type="button" class="list-group-item list-group-item-action js-menu-item" cible="users" href="#users"><i class="fa fa-users"></i>&nbsp; <% if (adminMode) { %>Voir les utilisateurs<% } else { %>Voir vos élèves<% } %></a>
   <a type="button" class="list-group-item list-group-item-action js-menu-item" cible="classes" href="#classes"><i class="fa fa-graduation-cap"></i>&nbsp; Voir les classes</a>
   <a type="button" class="list-group-item list-group-item-action js-menu-item" cible="exercices" href="#exercices"><i class="fa fa-files-o"></i>&nbsp; Voir les exercices</a>
-  <a type="button" class="list-group-item list-group-item-action js-menu-item" cible="devoirs" href="#Devoirs"><i class="fa fa-pencil-square-o"></i>&nbsp;  <% if (adminMode) { %>Voir les devoirs<% } else { %>voir vos devoirs<% } %></a>
+  <a type="button" class="list-group-item list-group-item-action js-menu-item" cible="fiches" href="#fiches"><i class="fa fa-pencil-square-o"></i>&nbsp;  <% if (adminMode) { %>Voir les fiches<% } else { %>voir vos fiches<% } %></a>
 </div>

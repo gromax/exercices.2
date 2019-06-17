@@ -49,7 +49,7 @@ AdminProfPanel = View.extend {
 }
 
 EleveNoDevoirView = View.extend {
-  template:  eleve_no_devoir_tpl
+  template: eleve_no_devoir_tpl
   tagName: "a"
   className: "list-group-item"
 }
@@ -105,7 +105,7 @@ UnfinishedsView = View.extend {
       number: @getOption("number")
     }
   triggers: {
-    "click": "devoir:unfinished:show"
+    "click": "unfinished:show"
   }
 }
 

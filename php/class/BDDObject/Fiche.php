@@ -136,7 +136,7 @@ final class Fiche
 			DB::delete(PREFIX_BDD.'assocEF', 'idFiche=%i', $this->id);
 			// Suppression de la fiche
 			DB::delete(PREFIX_BDD.'fiches', 'id=%i', $this->id);
-			EC::add("Le devoir a bien été supprimé.");
+			EC::add("La fiche a bien été supprimée.");
 			return true;
 		} catch(MeekroDBException $e) {
 			EC::addBDDError($e->getMessage(), "Fiche/Suppression");

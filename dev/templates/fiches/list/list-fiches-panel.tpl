@@ -5,7 +5,7 @@
       %><button class="btn btn-success js-inactive-filter" type="button">Inactifs <i class="fa fa-eye"></i></button><%
       } else {
       %><button class="btn btn-danger js-inactive-filter" type="button">Inactifs <i class="fa fa-eye-slash"></i></button><% }%>
-      <% if (!adminMode) { %><button class="btn btn-primary js-new" type="button">Nouveau devoir <i class="fa fa-pencil-square-o"></i></button><% } %>
+      <% if (!adminMode) { %><button class="btn btn-primary js-new" type="button">Nouvelle fiche <i class="fa fa-pencil-square-o"></i></button><% } %>
     </span>
   </div>
 </form>

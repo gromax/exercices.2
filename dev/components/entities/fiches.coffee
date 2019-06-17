@@ -1,5 +1,5 @@
 Item = Backbone.Model.extend {
-  urlRoot: "api/devoirs"
+  urlRoot: "api/fiches"
 
   defaults: {
     nomOwner: false
@@ -35,7 +35,7 @@ Item = Backbone.Model.extend {
 }
 
 Collection = Backbone.Collection.extend {
-  url: "api/devoirs"
+  url: "api/fiches"
   model: Item
   comparator: "nom"
 }

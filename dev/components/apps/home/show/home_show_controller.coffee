@@ -45,7 +45,7 @@ Controller = MnObject.extend {
       if n>0
         # Il existe des exerices non terminés, on affiche la vue correspondante
         unfinishedMessageView = new UnfinishedsView { number:n }
-        unfinishedMessageView.on "devoir:unfinished:show", () ->
+        unfinishedMessageView.on "unfinished:show", () ->
           app.trigger "faits:unfinished"
         layout.on "render", ()->
           layout.getRegion('devoirsRegion').show(listEleveView)

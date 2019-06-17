@@ -1,13 +1,13 @@
 import { View, CollectionView } from 'backbone.marionette'
 import { DestroyWarn, FlashItem, FilterList, SortList, ToggleItemValue } from 'apps/common/behaviors.coffee'
 
-import panel_tpl from 'templates/devoirs/list/list-devoirs-panel.tpl'
-import no_devoir_tpl from 'templates/devoirs/list/devoir-list-none.tpl'
-import devoir_item_tpl from 'templates/devoirs/list/devoir-list-item.tpl'
-import devoirs_list_tpl from 'templates/devoirs/list/devoir-list.tpl'
+import panel_tpl from 'templates/fiches/list/list-fiches-panel.tpl'
+import no_fiche_tpl from 'templates/fiches/list/fiche-list-none.tpl'
+import fiche_item_tpl from 'templates/fiches/list/fiche-list-item.tpl'
+import fiches_list_tpl from 'templates/fiches/list/fiche-list.tpl'
 
 
-DevoirsPanel = View.extend {
+FichesPanel = View.extend {
   adminMode: false
   showInactifs: true
   template: panel_tpl
@@ -17,21 +17,21 @@ DevoirsPanel = View.extend {
       showInactifs: @getOption "showInactifs"
     }
   triggers: {
-    "click button.js-new": "devoir:new",
-    "click button.js-inactive-filter": "devoir:toggle:showInactifs"
+    "click button.js-new": "fiche:new",
+    "click button.js-inactive-filter": "fiche:toggle:showInactifs"
   }
 }
 
-NoDevoirView = View.extend {
-  template: no_devoir_tpl
+NoFicheView = View.extend {
+  template: no_fiche_tpl
   tagName: "tr"
   className: "alert"
 }
 
-DevoirItemView = View.extend {
+FicheItemView = View.extend {
   adminMode: false
   tagName: "tr"
-  template: devoir_item_tpl
+  template: fiche_item_tpl
   behaviors: [
     DestroyWarn
     FlashItem
@@ -51,13 +51,13 @@ DevoirItemView = View.extend {
     }
 }
 
-DevoirsCollectionView = CollectionView.extend {
+FichesCollectionView = CollectionView.extend {
   adminMode: false
   tagName: "table"
   className:"table table-hover"
-  template: devoirs_list_tpl
-  childView:DevoirItemView
-  emptyView:NoDevoirView
+  template: fiches_list_tpl
+  childView:FicheItemView
+  emptyView:NoFicheView
   behaviors: [FilterList, SortList]
   childViewEventPrefix: "item"
   childViewContainer: "tbody"
@@ -72,4 +72,4 @@ DevoirsCollectionView = CollectionView.extend {
     }
 }
 
-export { DevoirsPanel, DevoirsCollectionView }
+export { FichesPanel, FichesCollectionView }

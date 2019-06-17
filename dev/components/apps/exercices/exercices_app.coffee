@@ -32,7 +32,7 @@ Router = Backbone.Router.extend {
     var auth = app.Auth;
     var testForProf = function(){
       app.Ariane.reset([
-        { text:"Devoirs", e:"devoirs:list", link:"devoirs"},
+        { text:"Fiches", e:"fiches:list", link:"fiches"},
       ]);
       require(["apps/exercices/show/show_controller"], function(showController){
         showController.execExoFicheForProf(idEF);
@@ -59,7 +59,7 @@ Router = Backbone.Router.extend {
     var auth = app.Auth;
     var forProf = function(){
       app.Ariane.reset([
-        { text:"Devoirs", e:"devoirs:list", link:"devoirs"},
+        { text:"Fiches", e:"fiches:list", link:"fiches"},
       ]);
       require(["apps/exercices/show/show_controller"], function(showController){
         showController.execUEForProf(idUE);

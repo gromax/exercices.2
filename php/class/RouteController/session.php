@@ -142,9 +142,7 @@ class session
         }
         return array(
             "logged"=>$uLog->toArray(),
-            "users" => array(),
             "classes" => Classe::getList(array('forJoin'=> true )),
-            "devoirs" => array(),
             "messages"=>EC::messages()
         );
     }

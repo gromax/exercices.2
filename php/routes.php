@@ -33,10 +33,10 @@ $router->addRule('api/classes/:id/test', 'classes', 'testMDP', 'GET');
 $router->addRule('api/classe/:id/fill', 'classes', 'fill', 'POST');
 
 
-// devoirs
-$router->addRule('api/devoirs/:id', 'fiches', 'delete', 'DELETE');
-$router->addRule('api/devoirs/:id', 'fiches', 'update', 'PUT');
-$router->addRule('api/devoirs', 'fiches', 'insert', 'POST');
+// fiches
+$router->addRule('api/fiches/:id', 'fiches', 'delete', 'DELETE');
+$router->addRule('api/fiches/:id', 'fiches', 'update', 'PUT');
+$router->addRule('api/fiches', 'fiches', 'insert', 'POST');
 
 // exosfiche
 $router->addRule('api/exosfiche/:id', 'exosfiche', 'delete', 'DELETE');

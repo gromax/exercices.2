@@ -1,6 +1,6 @@
 import { MnObject } from 'backbone.marionette'
-import { DevoirsPanel, DevoirsCollectionView } from 'apps/devoirs/list/list_devoirs_views.coffee'
-import { NewDevoirView, EditDevoirView } from 'apps/devoirs/edit/edit_devoir_views.coffee'
+import { FichesPanel, FichesCollectionView } from 'apps/fiches/list/list_fiches_views.coffee'
+import { NewFicheView, EditFicheView } from 'apps/fiches/edit/edit_fiche_views.coffee'
 import { AlertView, ListLayout } from 'apps/common/common_views.coffee'
 import { app } from 'app'
 
@@ -9,41 +9,41 @@ Controller = MnObject.extend {
   list: ->
     app.trigger("header:loading", true)
     listItemsLayout = new ListLayout()
-    panel = new DevoirsPanel {
+    panel = new FichesPanel {
       adminMode: app.Auth.isAdmin()
-      showInactifs: app.settings.showDevoirsInactifs is true
+      showInactifs: app.settings.showFichesInactifs is true
     }
     channel = @getChannel()
-    Item = require("entities/devoirs.coffee").Item
+    Item = require("entities/fiches.coffee").Item
     require('entities/dataManager.coffee')
 
-    fetchingDevoirsList = channel.request("custom:entities",["devoirs"])
-    $.when(fetchingDevoirsList).done( (devoirs)->
-      listItemsView = new DevoirsCollectionView {
-        collection: devoirs
+    fetchingFichesList = channel.request("custom:entities",["fiches"])
+    $.when(fetchingFichesList).done( (fiches)->
+      listItemsView = new FichesCollectionView {
+        collection: fiches
         adminMode: app.Auth.isAdmin()
-        showInactifs: app.settings.showDevoirsInactifs is true
+        showInactifs: app.settings.showFichesInactifs is true
       }
 
       listItemsLayout.on "render", ()->
         listItemsLayout.getRegion('panelRegion').show(panel)
         listItemsLayout.getRegion('itemsRegion').show(listItemsView)
 
-      panel.on "devoir:new", ->
+      panel.on "fiche:new", ->
         newItem = new Item()
-        newItemView = new NewDevoirView {
+        newItemView = new NewFicheView {
           model: newItem
-          collection: devoirs
+          collection: fiches
           listView: listItemsView
           errorCode: "020"
         }
         app.regions.getRegion('dialog').show(newItemView)
 
-      panel.on "devoir:toggle:showInactifs", ()->
+      panel.on "fiche:toggle:showInactifs", ()->
         alert("non implémenté")
 
       listItemsView.on "item:show", (childView, args)->
-        app.trigger "devoir:show", childView.model.get("id")
+        app.trigger "fiche:show", childView.model.get("id")
 
       listItemsView.on "item:toggle:activity", (childView) ->
         childView.trigger "toggle:attribute", "actif"
