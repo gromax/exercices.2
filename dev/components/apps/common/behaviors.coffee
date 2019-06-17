@@ -258,7 +258,22 @@ ToggleItemValue = Behavior.extend {
       )
     else
       @view.trigger "flash:error"
-
 }
 
-export { SortList, FilterList, DestroyWarn, SubmitClicked, FlashItem, NewItem, EditItem, ToggleItemValue }
+FilterPanel = Behavior.extend {
+  ui: {
+    criterion: "input.js-filter-criterion"
+    form: "#filter-form"
+  }
+  events: {
+    "submit @ui.form": "applyFilter"
+  }
+  applyFilter: (e)->
+    e.preventDefault()
+    criterion = @ui.criterion.val()
+    @view.trigger("items:filter", criterion)
+  onSetFilterCriterion: (criterion)->
+    @ui.criterion.val(criterion)
+}
+
+export { SortList, FilterList, DestroyWarn, SubmitClicked, FlashItem, NewItem, EditItem, ToggleItemValue, FilterPanel }
