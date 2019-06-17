@@ -1,7 +1,7 @@
 import { MnObject } from 'backbone.marionette'
 import { DevoirsPanel, DevoirsCollectionView } from 'apps/devoirs/list/list_devoirs_views.coffee'
 import { NewDevoirView, EditDevoirView } from 'apps/devoirs/edit/edit_devoir_views.coffee'
-import { AlertView, MissingItemView, ListLayout } from 'apps/common/common_views.coffee'
+import { AlertView, ListLayout } from 'apps/common/common_views.coffee'
 import { app } from 'app'
 
 Controller = MnObject.extend {
