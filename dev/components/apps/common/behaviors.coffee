@@ -248,7 +248,7 @@ ToggleItemValue = Behavior.extend {
           alert "Vous devez vous (re)connecter !"
           app.trigger "home:logout"
         else
-          if errorCode = self.getOption("errorCode")
+          if errorCode = self.view.getOption("errorCode")
             errorCode = "/#{errorCode}"
           else
             errorCode = ""
