@@ -32,13 +32,11 @@ FicheItemView = View.extend {
   adminMode: false
   tagName: "tr"
   template: fiche_item_tpl
+  errorCode: "021"
   behaviors: [
     DestroyWarn
     FlashItem
-    {
-      behaviorClass: ToggleItemValue
-      errorCode: "021"
-    }
+    ToggleItemValue
   ]
   triggers: {
     "click button.js-actif": "toggle:activity"
