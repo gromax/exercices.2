@@ -165,6 +165,7 @@ NewItem = Behavior.extend {
         view.getOption("collection")?.add newItem
         view.trigger "dialog:close"
         view.getOption("listView")?.children.findByModel(newItem)?.trigger("flash:success")
+        view.trigger "model:save:success", view.model
       ).fail( (response)->
         switch response.status
           when 422
@@ -179,6 +180,7 @@ NewItem = Behavior.extend {
             else
               errorCode = ""
             alert("Erreur inconnue. Essayez à nouveau ou prévenez l'administrateur [code #{response.status}#{errorCode}]")
+        view.trigger "model:save:fail", response
       ).always(()->
         app.trigger("header:loading", false)
       )
