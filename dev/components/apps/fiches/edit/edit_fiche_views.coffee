@@ -10,6 +10,12 @@ import eleve_item_view_tpl from 'templates/fiches/edit/add-devoir-eleve-item.tpl
 import eleve_list_view_tpl from 'templates/fiches/edit/add-devoir-eleves-list.tpl'
 import add_devoir_panel_tpl from 'templates/fiches/edit/add-devoir-panel.tpl'
 import tabs_panel_tpl from 'templates/fiches/edit/tabs-panel.tpl'
+import exam_panel_tpl from 'templates/fiches/edit/exam-panel.tpl'
+import exam_list_none_tpl from 'templates/fiches/edit/exam-list-none.tpl'
+import exam_list_item_tpl from 'templates/fiches/edit/exam-list-item.tpl'
+import exam_list_tpl from 'templates/fiches/edit/exam-list.tpl'
+import exam_edit_tpl from 'templates/fiches/edit/exam-edit.tpl'
+
 
 FicheLayout = View.extend {
   template: layout_tpl
@@ -161,4 +167,53 @@ AddDevoirPanel = View.extend {
   behaviors: [FilterPanel]
 }
 
-export { FicheLayout, NewFicheView, EditFicheView, TabsPanel, DevoirsCollectionView, ElevesCollectionView, AddDevoirPanel }
+#-------------------
+# views pour exams -
+#-------------------
+
+ExamPanel = View.extend {
+  template: exam_panel_tpl
+  triggers: {
+    "click button.js-new": "exam:new"
+  }
+}
+
+NoExamView = View.extend {
+  template: exam_list_none_tpl
+  tagName: "tr"
+  className: "alert"
+}
+
+ExamItemView = View.extend {
+  tagName: "tr"
+  errorCode: "???"
+  template: exam_list_item_tpl
+  behaviors: [DestroyWarn, ToggleItemValue, FlashItem]
+  triggers: {
+    "click button.js-edit": "edit",
+    "click button.js-lock": "item:lock"
+    "click": "item:show"
+  }
+}
+
+ExamsCollectionView = CollectionView.extend {
+  tagName: "table"
+  className:"table table-hover"
+  template: exam_list_tpl
+  childView: ExamItemView
+  emptyView: NoExamView
+  childViewEventPrefix: "item"
+  behaviors: [SortList]
+  filterView: (child, index, collection) ->
+    # On affiche que les exofiches qui ont sont dans la bonne fiche
+    child.get("idFiche") is @getOption("idFiche")
+
+}
+
+ExamEditView = View.extend {
+  title: "Modification"
+  behaviors: [SubmitClicked, EditItem]
+  template: exam_edit_tpl
+}
+
+export { FicheLayout, NewFicheView, EditFicheView, TabsPanel, DevoirsCollectionView, ElevesCollectionView, AddDevoirPanel, ExamsCollectionView, ExamPanel, ExamEditView }
