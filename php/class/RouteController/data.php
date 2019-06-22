@@ -45,7 +45,7 @@ class data
         {
             return array(
                 "aEFs" => ExoFiche::getList(array("idUser"=>$uLog->getId())),
-                "aUFs" => AssoUF::getList(array("idUser"=> $uLog->getId() )),
+                "devoirs" => AssoUF::getList(array("idUser"=> $uLog->getId() )),
                 "aUEs" => Note::getList(array("idUser"=>$uLog->getId())),
                 "messages" => Message::getList($uLog->getId())
             );
@@ -98,14 +98,14 @@ class data
                 }
             }
 
-            if (in_array("userfiches", $asks)){
+            if (in_array("devoirs", $asks)){
                 $answer = AssoUF::getList(array("idUser"=> $uLog->getId() ));
                 if (isset($answer["error"]) && $answer["error"]) {
                     EC::addError($answer["message"]);
                     EC::set_error_code(501);
                     return false;
                 } else {
-                    $output["userfiches"] = $answer;
+                    $output["devoirs"] = $answer;
                 }
             }
 
@@ -171,8 +171,8 @@ class data
                 }
             }
 
-            if (in_array("userfiches", $asks)){
-                $output["userfiches"] = AssoUF::getList(array("idOwner"=> $uLog->getId() ));
+            if (in_array("devoirs", $asks)){
+                $output["devoirs"] = AssoUF::getList(array("idOwner"=> $uLog->getId() ));
             }
 
             if (in_array("exofiches", $asks)){
@@ -259,14 +259,14 @@ class data
                 }
             }
 
-            if (in_array("userfiches", $asks)){
+            if (in_array("devoirs", $asks)){
                 $answer = AssoUF::getList();
                 if (isset($answer["error"]) && $answer["error"]) {
                     EC::addError($answer["message"]);
                     EC::set_error_code(501);
                     return false;
                 } else {
-                    $output["userfiches"] = $answer;
+                    $output["devoirs"] = $answer;
                 }
             }
 
