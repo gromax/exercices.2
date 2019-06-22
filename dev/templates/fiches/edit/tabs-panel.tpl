@@ -1,6 +1,6 @@
 <ul class="nav nav-tabs">
   <li class="nav-item">
-    <a class="nav-link <% if(panel==0) {%>active<% } %> js-devoir" href="#">Fiche</a>
+    <a class="nav-link <% if(panel==0) {%>active<% } %> js-description" href="#">Description</a>
   </li>
   <li class="nav-item">
     <a class="nav-link <% if(panel==1) {%>active<% } %> js-exercices" href="#">Exercices</a>
