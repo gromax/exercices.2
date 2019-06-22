@@ -1,7 +1,8 @@
 import { View, CollectionView } from 'backbone.marionette'
 import { SubmitClicked, NewItem, EditItem, ToggleItemValue, DestroyWarn, FlashItem, SortList, FilterList, FilterPanel } from 'apps/common/behaviors.coffee'
 import layout_tpl from 'templates/fiches/edit/edit-fiche-layout.tpl'
-import edit_fiche_tpl from 'templates/fiches/edit/fiche-description-edit.tpl'
+import edit_fiche_description_tpl from 'templates/fiches/edit/fiche-description-edit.tpl'
+import show_fiche_description_tpl from 'templates/fiches/edit/fiche-description-show.tpl'
 import devoir_list_none_tpl from 'templates/fiches/edit/devoirs-list-none.tpl'
 import devoir_item_view_tpl from 'templates/fiches/edit/devoirs-list-item.tpl'
 import devoir_list_view_tpl from 'templates/fiches/edit/devoirs-list.tpl'
@@ -32,8 +33,8 @@ NewFicheView = View.extend {
   behaviors: [ SubmitClicked, NewItem ]
 }
 
-EditFicheView = View.extend {
-  template: edit_fiche_tpl
+EditFicheDescriptionView = View.extend {
+  template: edit_fiche_description_tpl
   behaviors: [SubmitClicked, EditItem]
   title: "Modifier le fiche"
   generateTitle: false
@@ -43,11 +44,18 @@ EditFicheView = View.extend {
       @$el.prepend($title)
 }
 
+ShowFicheDescriptionView = View.extend {
+  template: show_fiche_description_tpl
+  triggers: {
+    "click a.js-edit": "edit"
+  }
+}
+
 TabsPanel = View.extend {
   template: tabs_panel_tpl
   panel: 0
   triggers: {
-    "click a.js-devoir": "tab:devoir"
+    "click a.js-description": "tab:description"
     "click a.js-exercices": "tab:exercices"
     "click a.js-notes": "tab:notes"
     "click a.js-eleves": "tab:eleves"
@@ -216,4 +224,4 @@ ExamEditView = View.extend {
   template: exam_edit_tpl
 }
 
-export { FicheLayout, NewFicheView, EditFicheView, TabsPanel, DevoirsCollectionView, ElevesCollectionView, AddDevoirPanel, ExamsCollectionView, ExamPanel, ExamEditView }
+export { FicheLayout, NewFicheView, EditFicheDescriptionView, ShowFicheDescriptionView, TabsPanel, DevoirsCollectionView, ElevesCollectionView, AddDevoirPanel, ExamsCollectionView, ExamPanel, ExamEditView }
