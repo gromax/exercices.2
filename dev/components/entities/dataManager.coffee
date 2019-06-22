@@ -23,7 +23,7 @@ API = {
           colObj = false
           switch colName
             when "fiches" then colObj = require("entities/fiches.coffee")
-            #when "userfiches" then colObj = require("entities/userfiches.coffee")
+            when "devoirs" then colObj = require("entities/devoirs.coffee")
             #when "exofiches" then colObj = require("entities/exofiches.coffee")
             #when "faits" then colObj = require("entities/faits.coffee")
             when "users" then colObj = require("entities/users.coffee")
