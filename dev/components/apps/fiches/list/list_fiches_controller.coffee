@@ -1,6 +1,6 @@
 import { MnObject } from 'backbone.marionette'
 import { FichesPanel, FichesCollectionView } from 'apps/fiches/list/list_fiches_views.coffee'
-import { NewFicheView, EditFicheView } from 'apps/fiches/edit/edit_fiche_views.coffee'
+import { NewFicheView } from 'apps/fiches/edit/edit_fiche_views.coffee'
 import { AlertView, ListLayout } from 'apps/common/common_views.coffee'
 import { app } from 'app'
 
