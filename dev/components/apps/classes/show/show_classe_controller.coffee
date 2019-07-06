@@ -1,15 +1,14 @@
 import { MnObject } from 'backbone.marionette'
 import { ShowClasseView } from 'apps/classes/show/show_classe_view.coffee'
-import { AlertView, MissingItemView } from 'apps/common/common_views.coffee'
 import { app } from 'app'
 
 Controller = MnObject.extend {
   channelName: 'entities',
 
   show: (id)->
-    app.trigger("header:loading", true)
+    app.trigger "loading:up"
     channel = @getChannel()
-    require('entities/dataManager.coffee')
+    require 'entities/dataManager.coffee'
     fetchingClasse = channel.request("classe:entity", id)
     $.when(fetchingClasse).done( (item)->
       if item isnt undefined
@@ -19,18 +18,13 @@ Controller = MnObject.extend {
         }
         view.on "classe:edit", (item) ->
           app.trigger("classe:edit", item.get("id"))
+        app.regions.getRegion('main').show(view)
       else
-        view = new MissingItemView( { message: "Cette classe n'existe pas !"})
-      app.regions.getRegion('main').show(view)
+        app.trigger "not:found"
     ).fail( (response)->
-      if response.status is 401
-        alert("Vous devez vous (re)connecter !")
-        app.trigger("home:logout")
-      else
-        alertView = new AlertView()
-        app.regions.getRegion('main').show(alertView)
+      app.trigger "data:fetch:fail", response
     ).always( ->
-      app.trigger("header:loading", false)
+      app.trigger "loading:down"
     )
 }
 
