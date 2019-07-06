@@ -19,7 +19,7 @@ AlertView = View.extend {
     }
 }
 
-MissingItemView = View.extend {
+MissingView = View.extend {
   template: missing_item_tpl
   message: "Cet item n'existe pas."
   templateContext: ->
@@ -36,4 +36,4 @@ ListLayout = View.extend {
   }
 }
 
-export { AlertView, MissingItemView, ListLayout }
+export { AlertView, MissingView, ListLayout }
