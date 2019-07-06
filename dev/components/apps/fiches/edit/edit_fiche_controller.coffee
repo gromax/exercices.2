@@ -1,5 +1,4 @@
 import { MnObject } from 'backbone.marionette'
-import { AlertView, MissingItemView } from 'apps/common/common_views.coffee'
 impott { FicheLayout, TabsPanel, ShowFicheDescriptionView } from 'apps/fiches/edit/edit_fiche_views.coffee'
 import { app } from 'app'
 
@@ -18,7 +17,7 @@ Controller = MnObject.extend {
       app.trigger "devoir:exams", id
   showDescription: (id) ->
     # vue des paramètres du devoir lui même
-    app.trigger("header:loading", true)
+    app.trigger "loading:up"
     layout = new FicheLayout()
     tabs = new TabsPanel {panel:0}
     @linkTabsEvents tabs
@@ -38,17 +37,11 @@ Controller = MnObject.extend {
           app.trigger "fiche:edit", id
         layout.getRegion('contentRegion').show(view)
       else
-        view = new MissingItemView()
-        layout.getRegion('contentRegion').show(view)
+        app.trigger "not:found"
     ).fail( (response) ->
-      if response.status is 401
-        alert("Vous devez vous (re)connecter !")
-        app.trigger("home:logout")
-      else
-        alertView = new AlertView()
-        app.regions.getRegion('main').show(alertView)
-    ).always( () ->
-      app.trigger "header:loading", false
+      app.trigger "data:fetch:fail", response
+    ).always( ->
+      app.trigger "loading:down"
     )
 
 }
