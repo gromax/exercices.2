@@ -1,33 +1,28 @@
 import { MnObject } from 'backbone.marionette'
 import { UsersPanel, UsersCollectionView } from 'apps/users/list/list_users_views.coffee'
 import { NewUserView, EditUserView, EditPwdUserView } from 'apps/users/edit/edit_user_views.coffee'
-import { AlertView, ListLayout } from 'apps/common/common_views.coffee'
+import { ListLayout } from 'apps/common/common_views.coffee'
 import { app } from 'app'
 
 Controller = MnObject.extend {
   channelName: 'entities'
   listUsers: (criterion)->
-    criterion = criterion ? ""
-    app.trigger("header:loading", true)
-    usersListLayout = new ListLayout()
-    usersListPanel = new UsersPanel {
-      filterCriterion:criterion
-      showAddButton:app.Auth.isAdmin()
-    }
     channel = @getChannel()
-
-    User = require("entities/users.coffee").item
     require('entities/dataManager.coffee')
-
+    app.trigger "loading:up"
     fetchingUsers = channel.request("custom:entities", ["users"])
     $.when(fetchingUsers).done( (users) ->
+      criterion = criterion ? ""
+      usersListLayout = new ListLayout()
+      usersListPanel = new UsersPanel {
+        filterCriterion:criterion
+        showAddButton:app.Auth.isAdmin()
+      }
       usersListView = new UsersCollectionView {
         collection: users
         adminMode: app.Auth.isAdmin()
       }
-
       usersListView.trigger "set:filter:criterion", criterion, { preventRender:false }
-
       usersListPanel.on "items:filter", (filterCriterion)->
         usersListView.trigger "set:filter:criterion", filterCriterion, { preventRender:false }
         app.trigger("users:filter", filterCriterion)
@@ -37,10 +32,10 @@ Controller = MnObject.extend {
         usersListLayout.getRegion('itemsRegion').show(usersListView)
 
       usersListPanel.on "user:new", ->
+        User = require("entities/users.coffee").Item
         newUser = new User()
         newUserView = new NewUserView {
           model: newUser
-          collection: users
           listView: usersListView
           ranks: if app.Auth.isRoot() then 2 else 1
           errorCode: "030"
@@ -76,10 +71,10 @@ Controller = MnObject.extend {
         model = childView.model
         email = model.get("email")
         if confirm("Envoyer un mail de réinitialisation à « #{model.get('nomComplet')} » ?")
-          app.trigger("header:loading", true)
+          app.trigger "loading:up"
           sendingMail = channel.request("forgotten:password", email)
           sendingMail.always( ->
-            app.trigger "header:loading", false
+            app.trigger "loading:down"
           ).done( (response)->
             childView.trigger "flash:success"
           ).fail( (response)->
@@ -88,10 +83,10 @@ Controller = MnObject.extend {
 
       usersListView.on "item:sudo", (childView, e)->
         model = childView.model
-        app.trigger "header:loading", true
+        app.trigger "loading:up"
         connecting = app.Auth.sudo model.get("id")
-        $.when(connecting).done( ()->
-          app.trigger("home:show")
+        $.when(connecting).done( ->
+          app.trigger "home:show"
         ).fail( (response)->
           switch response.status
             when 404
@@ -101,19 +96,14 @@ Controller = MnObject.extend {
             else
               alert "Erreur inconnue."
         ).always( ->
-          app.trigger("header:loading", false)
+          app.trigger "loading:down"
         )
 
       app.regions.getRegion('main').show(usersListLayout)
     ).fail( (response)->
-      if response.status is 401
-        alert("Vous devez vous (re)connecter !")
-        app.trigger("home:logout")
-      else
-        alertView = new AlertView()
-        app.regions.getRegion('main').show(alertView)
-    ).always( ()->
-      app.trigger("header:loading", false)
+      app.trigger "data:fetch:fail", response
+    ).always( ->
+      app.trigger "loading:down"
     )
 }
 
