@@ -3,7 +3,7 @@ import Radio from 'backbone.radio'
 
 Manager = Application.extend {
   region: '#app'
-  getCurrentRoute: () -> Backbone.history.fragment
+  getCurrentRoute: -> Backbone.history.fragment
   navigate: (route, options) ->
     options or (options = {})
     Backbone.history.navigate(route, options)
@@ -41,7 +41,8 @@ Manager = Application.extend {
   onStart: (app, options) ->
     @version = VERSION
     self = @
-    historyStart = () ->
+    historyStart = ->
+      require('apps/common/default_app.coffee')
       require('apps/home/home_app.coffee')
       require('apps/ariane/ariane_app.coffee')
       require('apps/header/header_app.coffee')
