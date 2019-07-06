@@ -1,5 +1,5 @@
 import { View } from 'backbone.marionette'
-import { SubmitClicked, NewItem, EditItem } from 'apps/common/behaviors.coffee'
+import { SubmitClicked, EditItem } from 'apps/common/behaviors.coffee'
 
 import edit_user_tpl from 'templates/users/edit/user-form.tpl'
 import edit_pwd_user_tpl from 'templates/users/edit/userpwd-form.tpl'
@@ -46,7 +46,7 @@ NewUserView = View.extend {
   ranks:1
   editorIsAdmin: true
   template: edit_user_tpl
-  behaviors: [ SubmitClicked, NewItem ]
+  behaviors: [ SubmitClicked, EditItem ]
   templateContext: ->
     {
       showPWD: @getOption "showPWD"

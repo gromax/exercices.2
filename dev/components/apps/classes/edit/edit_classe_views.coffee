@@ -1,5 +1,5 @@
 import { View } from 'backbone.marionette'
-import { SubmitClicked, NewItem, EditItem } from 'apps/common/behaviors.coffee'
+import { SubmitClicked, EditItem } from 'apps/common/behaviors.coffee'
 import edit_tpl from 'templates/classes/common/classe-form.tpl'
 import new_tpl from 'templates/classes/common/classe-form.tpl'
 import fill_tpl from 'templates/classes/list/classe-fill-form.tpl'
@@ -20,7 +20,7 @@ EditClasseView = View.extend {
 NewClasseView = View.extend {
   title: "Nouvelle classe"
   template: new_tpl
-  behaviors: [SubmitClicked, NewItem]
+  behaviors: [SubmitClicked, EditItem]
 }
 
 FillClasseView = View.extend {

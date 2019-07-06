@@ -1,5 +1,5 @@
 import { View, CollectionView } from 'backbone.marionette'
-import { SubmitClicked, NewItem, EditItem, ToggleItemValue, DestroyWarn, FlashItem, SortList, FilterList, FilterPanel } from 'apps/common/behaviors.coffee'
+import { SubmitClicked, EditItem, ToggleItemValue, DestroyWarn, FlashItem, SortList, FilterList, FilterPanel } from 'apps/common/behaviors.coffee'
 import layout_tpl from 'templates/fiches/edit/edit-fiche-layout.tpl'
 import edit_fiche_description_tpl from 'templates/fiches/edit/fiche-description-edit.tpl'
 import show_fiche_description_tpl from 'templates/fiches/edit/fiche-description-show.tpl'
@@ -30,7 +30,7 @@ FicheLayout = View.extend {
 NewFicheView = View.extend {
   title: "Nouvelle fiche"
   template: edit_fiche_tpl
-  behaviors: [ SubmitClicked, NewItem ]
+  behaviors: [ SubmitClicked, EditItem ]
 }
 
 EditFicheDescriptionView = View.extend {
@@ -165,7 +165,7 @@ ElevesCollectionView = CollectionView.extend {
 
   childViewOptions: (model, index) ->
     {
-      counter: _.where(@getOption("devoirs", { idUser: model.get("id") }).length
+      counter: _.where(@options.devoirs, { idUser: model.get("id") }).length
     }
 
 }
