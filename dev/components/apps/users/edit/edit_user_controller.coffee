@@ -1,6 +1,5 @@
 import { MnObject } from 'backbone.marionette'
 import { EditUserView, EditPwdUserView } from 'apps/users/edit/edit_user_views.coffee'
-import { AlertView, MissingItemView } from 'apps/common/common_views.coffee'
 import { app } from 'app'
 
 Controller = MnObject.extend {
@@ -13,7 +12,7 @@ Controller = MnObject.extend {
       textLink="Modification"
       trigger="user:edit"
 
-    app.trigger("header:loading", true)
+    app.trigger app.trigger "loading:up"
     channel = @getChannel()
     require('entities/dataManager.coffee')
     if isMe
@@ -49,7 +48,7 @@ Controller = MnObject.extend {
               app.Auth.set(data) # met à jour nom, prénom et pref
             app.trigger "user:show", model.get("id")
         }
-
+        app.regions.getRegion('main').show(view)
       else
         if isMe
           app.Ariane.add [
@@ -61,17 +60,11 @@ Controller = MnObject.extend {
             { text:"Utilisateur inconnu", e:"user:show", data:id, link:"user:"+id }
             { text:textLink, e:trigger, data:id, link:"user:"+id+"/edit" }
           ]
-        view = new MissingView {message:"Cet utilisateur n'existe pas !"}
-      app.regions.getRegion('main').show(view)
+        app.trigger "not:found"
     ).fail( (response)->
-      if response.status is 401
-        alert("Vous devez vous (re)connecter !")
-        app.trigger("home:logout")
-      else
-        alertView = new AlertView()
-        app.regions.getRegion('main').show(alertView)
-    ).always( ()->
-      app.trigger("header:loading", false)
+      app.trigger "data:fetch:fail", response
+    ).always( ->
+      app.trigger "loading:down"
     )
 
 }

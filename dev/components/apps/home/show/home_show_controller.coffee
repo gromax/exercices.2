@@ -9,16 +9,16 @@ Controller = MnObject.extend {
     view = new NotFoundView()
     app.regions.getRegion('main').show(view)
   showAdminHome: ->
-    view = new AdminProfPanel({adminMode:true})
+    view = new AdminProfPanel {adminMode:true}
     app.regions.getRegion('main').show(view)
   showProfHome: ->
-    view = new AdminProfPanel({adminMode:false})
+    view = new AdminProfPanel {adminMode:false}
     app.regions.getRegion('main').show(view)
   showOffHome: ->
     view = new OffPanel()
     app.regions.getRegion('main').show(view)
   showEleveHome: ->
-    app.trigger("header:loading", true)
+    app.trigger "loading:up"
     layout = new EleveLayout()
     channel = @getChannel()
     require('entities/dataManager.coffee')
@@ -53,28 +53,22 @@ Controller = MnObject.extend {
             layout.getRegion('unfinishedRegion').show(unfinishedMessageView)
         app.regions.getRegion('main').show(layout)
     ).fail( (response) ->
-      if response.status is 401
-        alert("Vous devez vous (re)connecter !")
-        app.trigger("home:logout")
-      else
-        alertView = new AlertView()
-        app.regions.getRegion('main').show(alertView)
-    ).always( () ->
-      app.trigger("header:loading", false)
+      app.trigger "data:fetch:fail", response
+    ).always( ->
+      app.trigger "loading:down"
     )
 
   showLogOnForgottenKey: (success) ->
     if success
       view = new ForgottenKeyView()
-      view.on "forgotten:reinitMDP:click", () ->
+      view.on "forgotten:reinitMDP:click", ->
         app.trigger "user:editPwd", null
       app.regions.getRegion('main').show(view)
     else
-      view = new AlertView {
+      app.trigger "show:message:error", {
         title:"Clé introuvable !"
         message:"L'adresse que vous avez saisie n'est pas valable."
       }
-      app.regions.getRegion('main').show(view)
 
   casloginfailed:  ->
     view = new AlertView {

@@ -1,6 +1,6 @@
 import { MnObject } from 'backbone.marionette'
 import { ExercicesPanel, ExercicesCollectionView } from 'apps/exercices/list/list_exercices_views.coffee'
-import { AlertView, ListLayout } from 'apps/common/common_views.coffee'
+import { ListLayout } from 'apps/common/common_views.coffee'
 import { app } from 'app'
 
 Controller = MnObject.extend {

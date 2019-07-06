@@ -1,17 +1,17 @@
 import { MnObject } from 'backbone.marionette'
 import { ClassesCollectionView, ClassesPanel } from 'apps/classes/list/list_classes_views.coffee'
 import { EditClasseView, NewClasseView, FillClasseView } from 'apps/classes/edit/edit_classe_views.coffee'
-import { AlertView, ListLayout } from 'apps/common/common_views.coffee'
+import { ListLayout } from 'apps/common/common_views.coffee'
 import { app } from 'app'
 
 Controller = MnObject.extend {
   channelName: 'entities',
 
   list_prof: (id) ->
-    app.trigger("header:loading", true)
+    app.trigger "loading:up"
     channel = @getChannel()
     mainFct = @listMain
-    require('entities/dataManager.coffee')
+    require 'entities/dataManager.coffee'
     fetching = channel.request("custom:entities", ["classes", "users"])
     $.when(fetching).done( (classesList, usersList)->
       prof = usersList.get(id)
@@ -23,36 +23,25 @@ Controller = MnObject.extend {
         ]
         mainFct(prof, classesList)
       else
-        view = new AlertView({message: "Cet utilisateur n'existe pas.", dismiss:false })
-        app.regions.getRegion('main').show(view)
+        app.trigger "not:found"
     ).fail( (response)->
-      if response.status is 401
-        alert("Vous devez vous (re)connecter !")
-        app.trigger("home:logout")
-      else
-        alertView = new AlertView()
-        app.regions.getRegion('main').show(alertView)
-      ).always( ()->
-        app.trigger("header:loading", false)
-      )
+      app.trigger "data:fetch:fail", response
+    ).always( ->
+      app.trigger "loading:down"
+    )
 
   list: ->
-    app.trigger("header:loading", true)
+    app.trigger "loading:up"
     channel = @getChannel()
     mainFct = @listMain
-    require('entities/dataManager.coffee')
+    require 'entities/dataManager.coffee'
     fetching = channel.request("custom:entities", ["classes"])
     $.when(fetching).done( (classesList)->
       mainFct(false, classesList)
     ).fail( (response)->
-      if response.status is 401
-        alert("Vous devez vous (re)connecter !")
-        app.trigger("home:logout")
-      else
-        alertView = new AlertView()
-        app.regions.getRegion('main').show(alertView)
-    ).always( ()->
-      app.trigger("header:loading", false)
+      app.trigger "data:fetch:fail", response
+    ).always( ->
+      app.trigger "loading:down"
     )
 
   listMain: (prof, classesList) ->
@@ -72,17 +61,16 @@ Controller = MnObject.extend {
     if prof isnt false
       listItemsView.trigger "set:filter:criterion", prof.get("id")+prof.get("nom")+prof.get("prenom"), { preventRender: true }
 
-    listItemsLayout.on "render", ()->
+    listItemsLayout.on "render", ->
       listItemsLayout.getRegion('panelRegion').show(listItemsPanel)
       listItemsLayout.getRegion('itemsRegion').show(listItemsView)
 
-    listItemsPanel.on "classe:new", ()->
+    listItemsPanel.on "classe:new", ->
       OClasse = require("entities/classes.coffee").Item
       newItem = new OClasse()
       view = new NewClasseView {
         model: newItem
         errorCode: "002"
-        collection: classesList
         listView: listItemsView
       }
       app.regions.getRegion('dialog').show(view)
