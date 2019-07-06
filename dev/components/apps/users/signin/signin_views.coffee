@@ -1,5 +1,5 @@
 import { View, CollectionView } from 'backbone.marionette'
-import { SubmitClicked, NewItem } from 'apps/common/behaviors.coffee'
+import { SubmitClicked, EditItem } from 'apps/common/behaviors.coffee'
 import test_mdp_tpl from 'templates/users/signin/test-mdp-form.tpl'
 import signin_tpl from 'templates/users/edit/userpwd-form.tpl'
 import no_classe_tpl from 'templates/users/signin/signin-no-classe.tpl'
@@ -17,7 +17,7 @@ SigninView = View.extend {
   title: "Rejoindre une classe"
   template: signin_tpl
   errorCode: "026"
-  behaviors: [SubmitClicked, NewItem]
+  behaviors: [SubmitClicked, EditItem]
   initialize: ->
     @title = "Rejoindre la classe "+@model.get("nomClasse")
   }
