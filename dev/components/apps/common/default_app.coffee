@@ -65,11 +65,4 @@ app.on "data:fetch:fail", (response, errorCode) ->
 app.on "not:found", ->
   router.notFound()
 
-app.on "loading:up", ->
-  app.ajaxCount++
-  app.trigger "header:loading", true
 
-app.on "loading:down", ->
-  app.ajaxCount--
-  if app.ajaxCount is 0
-    app.trigger "header:loading", false

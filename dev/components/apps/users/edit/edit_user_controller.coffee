@@ -12,7 +12,7 @@ Controller = MnObject.extend {
       textLink="Modification"
       trigger="user:edit"
 
-    app.trigger app.trigger "loading:up"
+    app.trigger "loading:up"
     channel = @getChannel()
     require('entities/dataManager.coffee')
     if isMe

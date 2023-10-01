@@ -70,6 +70,7 @@
     "webpack-dashboard": "latest",
     "webpack-dev-server": "latest",
     "webpack-livereload-plugin": "^2.2.0",
-    "webpack-merge": "latest"
+    "webpack-merge": "latest",
+    "mathjax-full": "latest"
   }
 }
