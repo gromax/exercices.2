@@ -5,5 +5,5 @@ module.exports = PACKAGE(
   './node_modules/mathjax-full/js',     // location of the mathjax library
   [],                                   // packages to link to
   __dirname,                            // our directory
-  './dev'                                   // where to put the packaged component
+  './dev'                               // where to put the packaged component
 );
